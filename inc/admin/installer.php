@@ -31,9 +31,7 @@ function mlab_core_load_upgrader(): void {
 	require_once ABSPATH . 'wp-admin/includes/misc.php';
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-	if ( ! class_exists( 'WP_Ajax_Upgrader_Skin' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
-	}
+	require_once ABSPATH . 'wp-admin/includes/class-wp-ajax-upgrader-skin.php';
 }
 
 /**
@@ -67,7 +65,7 @@ function mlab_core_run_upgrader( string $url ) {
 		return mlab_core_install_error( $result->get_error_message() );
 	}
 	if ( $skin->get_errors()->has_errors() ) {
-		return mlab_core_install_error( $skin->get_error_messages() );
+		return mlab_core_install_error( (string) $skin->get_error_messages() );
 	}
 	return true === $result ? true : mlab_core_install_error();
 }

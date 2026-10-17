@@ -8,6 +8,7 @@ final class ClientTest extends TestCase {
 		$GLOBALS['mlab_core_http_queue'] = array();
 		$GLOBALS['mlab_core_http_log']   = array();
 		$GLOBALS['mlab_core_options']    = array();
+		Client::flush_cache();
 	}
 
 	private function queue_catalog( array $products ): void {
@@ -141,5 +142,40 @@ final class ClientTest extends TestCase {
 		$info = ( new Client() )->update_info( 'mlab-seo' );
 		$this->assertInstanceOf( WP_Error::class, $info );
 		$this->assertSame( 'Zu viele Websites.', $info->message );
+	}
+
+	public function test_update_url_encodes_the_slug(): void {
+		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/update/mlab-seo', ( new Client() )->update_url( 'mlab-seo' ) );
+		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/update/a%2Fb', ( new Client() )->update_url( 'a/b' ) );
+	}
+
+	public function test_apply_request_args_merges_timeout_and_headers(): void {
+		$GLOBALS['mlab_core_options']['mlab_core_license_key'] = 'MLAB-GOOD';
+		$args = ( new Client() )->apply_request_args(
+			array(
+				'timeout' => 99,
+				'sslverify' => true,
+				'headers' => array( 'Accept' => 'application/json' ),
+			)
+		);
+		$this->assertSame( 5, $args['timeout'] );
+		$this->assertTrue( $args['sslverify'] );
+		$this->assertSame( 'application/json', $args['headers']['Accept'] );
+		$this->assertSame( 'MLAB-GOOD', $args['headers']['X-MLAB-License'] );
+		$this->assertSame( 'https://site.test', $args['headers']['X-MLAB-Site'] );
+	}
+
+	public function test_stored_option_is_memoised_until_the_client_writes(): void {
+		$this->queue_catalog( array( $this->product() ) );
+		$client = new Client();
+		$client->catalog();
+		$this->assertNotNull( $client->product( 'mlab-seo' ) );
+		$GLOBALS['mlab_core_options']['mlab_core_catalog']['products'] = array();
+		$this->assertNotNull( $client->product( 'mlab-seo' ) );
+
+		$this->queue_catalog( array( $this->product( 'mlab-two', 'mlab-two/mlab-two.php' ) ) );
+		$client->catalog( true );
+		$this->assertNull( $client->product( 'mlab-seo' ) );
+		$this->assertNotNull( $client->product( 'mlab-two' ) );
 	}
 }

@@ -64,6 +64,19 @@ function mlab_core_finish_result( $result, string $success ): void {
 }
 
 /**
+ * Reloads the catalog from the server, then finishes with its error or the success message.
+ *
+ * @param string $success Message when the reload worked.
+ */
+function mlab_core_reload_and_finish( string $success ): void {
+	$catalog = ( new Client() )->catalog( true );
+	if ( '' !== $catalog['error'] ) {
+		mlab_core_finish( 'error', $catalog['error'] );
+	}
+	mlab_core_finish( 'success', $success );
+}
+
+/**
  * The catalog product named by the posted slug. Never a path from the request.
  *
  * @return array Product with a safe main file; ends the request when unknown.
@@ -83,14 +96,13 @@ function mlab_core_posted_product(): array {
  */
 function mlab_core_action_save_key(): void {
 	mlab_core_guard( 'mlab_core_save_key', array( 'manage_options' ) );
-	if ( defined( 'MLAB_CORE_LICENSE_KEY' ) && '' !== (string) constant( 'MLAB_CORE_LICENSE_KEY' ) ) {
+	if ( mlab_core_license_key_locked() ) {
 		mlab_core_finish( 'error', __( 'Der Lizenzschlüssel ist in der wp-config.php festgelegt und kann hier nicht geändert werden.', 'mlab-core' ) );
 	}
 	// Nonce was checked in mlab_core_guard().
 	if ( isset( $_POST['remove'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		update_option( 'mlab_core_license_key', '', false );
-		( new Client() )->catalog( true );
-		mlab_core_finish( 'success', __( 'Der Lizenzschlüssel wurde entfernt.', 'mlab-core' ) );
+		mlab_core_reload_and_finish( __( 'Der Lizenzschlüssel wurde entfernt.', 'mlab-core' ) );
 	}
 	mlab_core_store_key( isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 }
@@ -105,11 +117,7 @@ function mlab_core_store_key( string $key ): void {
 		mlab_core_finish( 'error', __( 'Bitte gib einen Lizenzschlüssel ein.', 'mlab-core' ) );
 	}
 	update_option( 'mlab_core_license_key', $key, false );
-	$catalog = ( new Client() )->catalog( true );
-	if ( '' !== $catalog['error'] ) {
-		mlab_core_finish( 'error', $catalog['error'] );
-	}
-	mlab_core_finish( 'success', __( 'Der Lizenzschlüssel wurde gespeichert und die Liste neu geladen.', 'mlab-core' ) );
+	mlab_core_reload_and_finish( __( 'Der Lizenzschlüssel wurde gespeichert und die Liste neu geladen.', 'mlab-core' ) );
 }
 
 /**
@@ -117,11 +125,7 @@ function mlab_core_store_key( string $key ): void {
  */
 function mlab_core_action_refresh(): void {
 	mlab_core_guard( 'mlab_core_refresh', array( 'activate_plugins' ) );
-	$catalog = ( new Client() )->catalog( true );
-	if ( '' !== $catalog['error'] ) {
-		mlab_core_finish( 'error', $catalog['error'] );
-	}
-	mlab_core_finish( 'success', __( 'Die Liste ist aktuell.', 'mlab-core' ) );
+	mlab_core_reload_and_finish( __( 'Die Liste ist aktuell.', 'mlab-core' ) );
 }
 
 /**

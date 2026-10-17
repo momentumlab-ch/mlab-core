@@ -73,7 +73,7 @@ function mlab_core_form_open( string $action, string $slug = '' ): void {
  * Prints the license key form and the reload button.
  */
 function mlab_core_render_key_box(): void {
-	$locked = defined( 'MLAB_CORE_LICENSE_KEY' ) && '' !== (string) constant( 'MLAB_CORE_LICENSE_KEY' );
+	$locked = mlab_core_license_key_locked();
 	$key    = mlab_core_license_key();
 	echo '<div class="mlab-core-box"><h2>' . esc_html__( 'Lizenzschlüssel', 'mlab-core' ) . '</h2>';
 	if ( $locked ) {

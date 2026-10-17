@@ -40,10 +40,17 @@ function mlab_core_server_url(): string {
 }
 
 /**
+ * True when wp-config.php sets the license key, so the form cannot change it.
+ */
+function mlab_core_license_key_locked(): bool {
+	return defined( 'MLAB_CORE_LICENSE_KEY' ) && '' !== (string) constant( 'MLAB_CORE_LICENSE_KEY' );
+}
+
+/**
  * License key: the constant from wp-config.php wins over the stored option.
  */
 function mlab_core_license_key(): string {
-	if ( defined( 'MLAB_CORE_LICENSE_KEY' ) && '' !== (string) constant( 'MLAB_CORE_LICENSE_KEY' ) ) {
+	if ( mlab_core_license_key_locked() ) {
 		return (string) constant( 'MLAB_CORE_LICENSE_KEY' );
 	}
 	return (string) get_option( 'mlab_core_license_key', '' );

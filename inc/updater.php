@@ -1,16 +1,6 @@
 <?php
 /**
- * Updates über GitHub Releases (Plugin Update Checker v5).
- *
- * Platzhalter beim Anlegen im Projekt ersetzen:
- * mlab_core        Kleinbuchstaben-Präfix, z. B. mlab_base
- * MLAB_CORE  Grossbuchstaben-Präfix, z. B. MLAB_BASE
- * mlab-core          Repo-Name = Ordnername, z. B. mlab-base
- * https://github.com/momentumlab-ch/mlab-core/      GitHub-Repo-URL mit Schluss-Slash
- * mlab-core.php     Hauptdatei relativ zum Projektordner: mein-plugin.php oder style.css
- * false       true für private Repos, sonst false
- *
- * Die Quelle steht nur hier. Der Header "Update URI" in der Hauptdatei nennt dieselbe URL.
+ * Updates of the core itself from GitHub Releases (Plugin Update Checker v5).
  *
  * @package mlab-core
  */

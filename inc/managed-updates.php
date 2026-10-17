@@ -11,7 +11,9 @@ use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'init', 'mlab_core_register_managed_updates' );
+if ( is_admin() || wp_doing_cron() || wp_doing_ajax() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+	add_action( 'init', 'mlab_core_register_managed_updates' );
+}
 add_filter( 'mlab_core_manages_plugin', 'mlab_core_manages_plugin', 10, 2 );
 
 /**
@@ -26,18 +28,12 @@ function mlab_core_register_managed_updates(): void {
 			continue;
 		}
 		$checker = PucFactory::buildUpdateChecker(
-			mlab_core_server_url() . '/wp-json/mlab-ls/v1/update/' . rawurlencode( $slug ),
+			$client->update_url( $slug ),
 			WP_PLUGIN_DIR . '/' . $file,
 			$slug
 		);
 		$checker->addHttpRequestArgFilter(
-			static function ( $args ) use ( $client ) {
-				$core            = $client->request_args();
-				$args            = is_array( $args ) ? $args : array();
-				$args['timeout'] = $core['timeout'];
-				$args['headers'] = array_merge( (array) ( $args['headers'] ?? array() ), $core['headers'] );
-				return $args;
-			}
+			static fn( $args ) => $client->apply_request_args( is_array( $args ) ? $args : array() )
 		);
 	}
 }

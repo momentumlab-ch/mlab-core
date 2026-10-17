@@ -18,6 +18,20 @@ final class Client {
 	private const RETRY_GAP = 300;
 
 	/**
+	 * Stored catalog memoised for the current request, null when not loaded.
+	 *
+	 * @var array|null
+	 */
+	private static ?array $memo = null;
+
+	/**
+	 * Forgets the memoised stored catalog.
+	 */
+	public static function flush_cache(): void {
+		self::$memo = null;
+	}
+
+	/**
 	 * Catalog for the list, fetched again when older than the cache time or on refresh.
 	 *
 	 * @param bool $refresh Ignore the cache.
@@ -27,7 +41,7 @@ final class Client {
 		$stored = $this->stored();
 		if ( $refresh || $this->is_stale( $stored ) ) {
 			$stored = $this->fetch( $stored );
-			update_option( self::OPTION, $stored, false );
+			$this->write( $stored );
 		}
 		return array(
 			'products'   => $stored['products'],
@@ -43,16 +57,23 @@ final class Client {
 	 * @return array|\WP_Error
 	 */
 	public function update_info( string $slug ) {
-		$url      = mlab_core_server_url() . '/wp-json/mlab-ls/v1/update/' . rawurlencode( $slug );
-		$response = wp_remote_get( $url, $this->request_args() );
-		if ( is_wp_error( $response ) ) {
+		$result = $this->get_json( $this->update_url( $slug ) );
+		if ( 0 === $result['status'] ) {
 			return new \WP_Error( 'mlab_core_unreachable', $this->default_error() );
 		}
-		$data = json_decode( (string) wp_remote_retrieve_body( $response ), true );
-		if ( 200 !== (int) wp_remote_retrieve_response_code( $response ) || ! is_array( $data ) ) {
-			return new \WP_Error( 'mlab_core_server_error', $this->error_message( $data ) );
+		if ( 200 !== $result['status'] || ! is_array( $result['data'] ) ) {
+			return new \WP_Error( 'mlab_core_server_error', $this->error_message( $result['data'] ) );
 		}
-		return $data;
+		return $result['data'];
+	}
+
+	/**
+	 * Update endpoint of one product on the license server.
+	 *
+	 * @param string $slug Product slug.
+	 */
+	public function update_url( string $slug ): string {
+		return mlab_core_server_url() . '/wp-json/mlab-ls/v1/update/' . rawurlencode( $slug );
 	}
 
 	/**
@@ -70,6 +91,18 @@ final class Client {
 			'timeout' => (int) mlab_core_option( 'http_timeout' ),
 			'headers' => $headers,
 		);
+	}
+
+	/**
+	 * Merges timeout and headers of the core into HTTP request arguments.
+	 *
+	 * @param array $args Request arguments, e.g. from an update checker.
+	 */
+	public function apply_request_args( array $args ): array {
+		$core            = $this->request_args();
+		$args['timeout'] = $core['timeout'];
+		$args['headers'] = array_merge( (array) ( $args['headers'] ?? array() ), $core['headers'] );
+		return $args;
 	}
 
 	/**
@@ -101,12 +134,45 @@ final class Client {
 	 * @return array{products:array,error:string,fetched_at:int,failed_at:int}
 	 */
 	private function stored(): array {
-		$stored = get_option( self::OPTION, array() );
+		if ( null === self::$memo ) {
+			$stored     = get_option( self::OPTION, array() );
+			self::$memo = array(
+				'products'   => (array) ( $stored['products'] ?? array() ),
+				'error'      => (string) ( $stored['error'] ?? '' ),
+				'fetched_at' => (int) ( $stored['fetched_at'] ?? 0 ),
+				'failed_at'  => (int) ( $stored['failed_at'] ?? 0 ),
+			);
+		}
+		return self::$memo;
+	}
+
+	/**
+	 * Saves the stored catalog and drops the memo.
+	 *
+	 * @param array $stored New stored state.
+	 */
+	private function write( array $stored ): void {
+		update_option( self::OPTION, $stored, false );
+		self::flush_cache();
+	}
+
+	/**
+	 * GET request with the core arguments, status code and decoded JSON body.
+	 *
+	 * @param string $url Absolute URL.
+	 * @return array{status:int,data:mixed} Status 0 and no data when the server was not reached.
+	 */
+	private function get_json( string $url ): array {
+		$response = wp_remote_get( $url, $this->apply_request_args( array() ) );
+		if ( is_wp_error( $response ) ) {
+			return array(
+				'status' => 0,
+				'data'   => null,
+			);
+		}
 		return array(
-			'products'   => (array) ( $stored['products'] ?? array() ),
-			'error'      => (string) ( $stored['error'] ?? '' ),
-			'fetched_at' => (int) ( $stored['fetched_at'] ?? 0 ),
-			'failed_at'  => (int) ( $stored['failed_at'] ?? 0 ),
+			'status' => (int) wp_remote_retrieve_response_code( $response ),
+			'data'   => json_decode( (string) wp_remote_retrieve_body( $response ), true ),
 		);
 	}
 
@@ -127,9 +193,9 @@ final class Client {
 	 * @param array $stored Current stored state, kept on soft errors.
 	 */
 	private function fetch( array $stored ): array {
-		$response = wp_remote_get( mlab_core_server_url() . '/wp-json/mlab-ls/v1/catalog', $this->request_args() );
-		$status   = is_wp_error( $response ) ? 0 : (int) wp_remote_retrieve_response_code( $response );
-		$data     = is_wp_error( $response ) ? null : json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		$result = $this->get_json( mlab_core_server_url() . '/wp-json/mlab-ls/v1/catalog' );
+		$status = $result['status'];
+		$data   = $result['data'];
 		if ( 200 === $status && is_array( $data ) && isset( $data['products'] ) && is_array( $data['products'] ) ) {
 			return array(
 				'products'   => $this->safe_products( $data['products'] ),
@@ -150,13 +216,12 @@ final class Client {
 	 * @param array $products Products from the server.
 	 */
 	private function safe_products( array $products ): array {
-		$safe = array();
-		foreach ( $products as $product ) {
-			if ( is_array( $product ) && '' !== Row::safe_main_file( (string) ( $product['main_file'] ?? '' ) ) ) {
-				$safe[] = $product;
-			}
-		}
-		return $safe;
+		return array_values(
+			array_filter(
+				$products,
+				static fn( $product ) => is_array( $product ) && '' !== Row::safe_main_file( (string) ( $product['main_file'] ?? '' ) )
+			)
+		);
 	}
 
 	/**
