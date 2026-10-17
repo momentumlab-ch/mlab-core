@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+PHPCS-Konfiguration für ein WordPress-Plugin oder -Theme.
+Platzhalter: mlab-core durch die Textdomain des Projekts ersetzen (meist der Slug).
+Aufruf: vendor/bin/phpcs  (oder phpcs, wenn global installiert)
+-->
+<ruleset name="mlab-core">
+	<description>WordPress Coding Standards für mlab-core.</description>
+
+	<file>.</file>
+	<exclude-pattern>lib/*</exclude-pattern>
+	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>node_modules/*</exclude-pattern>
+	<exclude-pattern>tests/*</exclude-pattern>
+
+	<arg name="extensions" value="php" />
+	<arg name="colors" />
+	<arg name="parallel" value="8" />
+
+	<config name="testVersion" value="8.0-" />
+	<config name="minimum_supported_wp_version" value="6.4" />
+
+	<rule ref="WordPress" />
+
+	<!-- Class files use hyphenated names (class-license-key.php) for readability. -->
+	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
+		<exclude-pattern>inc/class-*.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>inc/class-*.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="mlab-core" />
+			</property>
+		</properties>
+	</rule>
+</ruleset>

@@ -1,0 +1,82 @@
+# Baut beim Tag vX.Y.Z das Installations-ZIP <slug>.zip und hängt es an das GitHub Release.
+# Vorlage aus dem Skill wordpress-development. Ins Projekt unter .github/workflows/release.yml kopieren.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ZIP bauen und prüfen
+        env:
+          SLUG: ${{ github.event.repository.name }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          VERSION="${TAG#v}"
+          STAGE="$RUNNER_TEMP/stage"
+          mkdir -p "$STAGE/$SLUG"
+          tar --exclude-from=.distignore -cf - . | tar -xf - -C "$STAGE/$SLUG"
+
+          if [ -f "$STAGE/$SLUG/$SLUG.php" ]; then
+            HEADER="$STAGE/$SLUG/$SLUG.php"
+          else
+            HEADER="$STAGE/$SLUG/style.css"
+          fi
+          HEADER_VERSION=$(grep -m1 -E '^[[:space:]*]*Version:' "$HEADER" | sed 's/.*Version:[[:space:]]*//; s/[[:space:]]*$//')
+          if [ "$HEADER_VERSION" != "$VERSION" ]; then
+            echo "::error::Version im Header ($HEADER_VERSION) passt nicht zum Tag ($VERSION)"
+            exit 1
+          fi
+
+          if [ -f "$STAGE/$SLUG/readme.txt" ]; then
+            STABLE=$(grep -m1 -i '^Stable tag:' "$STAGE/$SLUG/readme.txt" | sed 's/^[^:]*:[[:space:]]*//; s/[[:space:]]*$//' || true)
+            if [ "$STABLE" != "$VERSION" ]; then
+              echo "::error::Stable tag in readme.txt ($STABLE) passt nicht zum Tag ($VERSION)"
+              exit 1
+            fi
+          fi
+
+          CONSTANT=$(grep -m1 -oE "define\( *'[A-Z_]*_VERSION', *'[^']*'" "$STAGE/$SLUG/$SLUG.php" "$STAGE/$SLUG/functions.php" 2>/dev/null | sed "s/.*'\([^']*\)'$/\1/" | head -n 1 || true)
+          if [ -n "$CONSTANT" ] && [ "$CONSTANT" != "$VERSION" ]; then
+            echo "::error::Versionskonstante ($CONSTANT) passt nicht zum Tag ($VERSION)"
+            exit 1
+          fi
+
+          (cd "$STAGE" && zip -qr "$GITHUB_WORKSPACE/$SLUG.zip" "$SLUG")
+          if unzip -Z1 "$GITHUB_WORKSPACE/$SLUG.zip" | grep -qE '(^|/)(wp-config[^/]*\.php|\.env[^/]*)$'; then
+            echo "::error::ZIP enthält eine Konfigurations- oder Secret-Datei (wp-config, .env)"
+            exit 1
+          fi
+          TOP=$(unzip -Z1 "$GITHUB_WORKSPACE/$SLUG.zip" | cut -d/ -f1 | sort -u)
+          if [ "$TOP" != "$SLUG" ]; then
+            echo "::error::ZIP hat nicht genau einen Ordner oben namens $SLUG: $TOP"
+            exit 1
+          fi
+
+          SIZE=$(stat -c%s "$GITHUB_WORKSPACE/$SLUG.zip")
+          if [ "$SIZE" -gt 8388608 ]; then
+            echo "::warning::ZIP ist grösser als 8 MB ($SIZE Bytes). Viele Hostings haben dort ein Upload-Limit."
+          fi
+
+      - name: An Release anhängen
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLUG: ${{ github.event.repository.name }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$GITHUB_WORKSPACE/$SLUG.zip" --clobber
+          else
+            gh release create "$TAG" "$GITHUB_WORKSPACE/$SLUG.zip" --title "$TAG" --notes "Änderungen: siehe Changelog in readme.txt."
+          fi
