@@ -78,12 +78,21 @@ final class Client {
 	 * @param string $slug Product slug.
 	 */
 	public function product( string $slug ): ?array {
-		foreach ( $this->stored()['products'] as $product ) {
+		foreach ( $this->stored_products() as $product ) {
 			if ( ( $product['slug'] ?? '' ) === $slug ) {
 				return $product;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Products of the stored catalog, no HTTP.
+	 *
+	 * @return array[]
+	 */
+	public function stored_products(): array {
+		return $this->stored()['products'];
 	}
 
 	/**

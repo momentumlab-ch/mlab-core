@@ -23,4 +23,7 @@ define( 'MLAB_CORE_FILE', __FILE__ );
 define( 'MLAB_CORE_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once MLAB_CORE_DIR . 'inc/options.php';
+require_once MLAB_CORE_DIR . 'inc/class-row.php';
+require_once MLAB_CORE_DIR . 'inc/class-client.php';
 require_once MLAB_CORE_DIR . 'inc/updater.php';
+require_once MLAB_CORE_DIR . 'inc/managed-updates.php';
