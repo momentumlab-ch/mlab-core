@@ -1,0 +1,73 @@
+.mlab-core-box,
+.mlab-core-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 16px;
+	margin-bottom: 16px;
+}
+
+.mlab-core-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.mlab-core-card {
+	margin-bottom: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.mlab-core-card h3 {
+	margin: 0;
+}
+
+.mlab-core-card p {
+	margin: 0 0 8px;
+}
+
+.mlab-core-card form,
+.mlab-core-card > a {
+	margin-top: auto;
+}
+
+.mlab-core-meta {
+	color: #50575e;
+}
+
+.mlab-core-warning {
+	color: #8a2424;
+}
+
+.mlab-core-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.mlab-core .mlab-core-button {
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 16px;
+}
+
+.mlab-core .mlab-core-input {
+	min-height: 44px;
+	width: 100%;
+	max-width: 400px;
+}
+
+@media (max-width: 600px) {
+	.mlab-core-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.mlab-core .mlab-core-button {
+		width: 100%;
+	}
+}

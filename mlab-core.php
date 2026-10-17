@@ -27,3 +27,9 @@ require_once MLAB_CORE_DIR . 'inc/class-row.php';
 require_once MLAB_CORE_DIR . 'inc/class-client.php';
 require_once MLAB_CORE_DIR . 'inc/updater.php';
 require_once MLAB_CORE_DIR . 'inc/managed-updates.php';
+
+if ( is_admin() ) {
+	require_once MLAB_CORE_DIR . 'inc/admin/installer.php';
+	require_once MLAB_CORE_DIR . 'inc/admin/actions.php';
+	require_once MLAB_CORE_DIR . 'inc/admin/page.php';
+}
