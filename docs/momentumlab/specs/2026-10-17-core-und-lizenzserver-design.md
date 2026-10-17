@@ -11,7 +11,7 @@ MomentumLab installiert bei Kunden inzwischen 8 eigene WordPress-Plugins, jedes 
 - Ein Plugin beim Kunden: Lizenzschlüssel eingeben, Plugins per Schalter ein- und ausschalten. Höchstens drei Klicks pro Plugin, auf dem Handy bedienbar.
 - Jedes MomentumLab-Plugin behält sein eigenes GitHub-Repo und seine eigenen Releases (`<slug>.zip` aus der Release-Action).
 - Öffentliche und private Repos funktionieren gleich. Der GitHub-Token liegt nur auf dem Lizenzserver, nie beim Kunden.
-- Freischaltungen pro Plugin oder pro Paket, mit Ablaufdatum (Abo) oder unbefristet (Einmalkauf).
+- Freischaltungen pro Plugin oder pro Paket, mit Ablaufdatum (Abo) oder unbefristet (Einmalkauf). Ein Einmalkauf erhält alle künftigen Updates ohne zeitliche Grenze (Annahme, von Chris noch zu bestätigen).
 - Updates erscheinen im normalen WordPress-Update-Bereich, Auto-Update bleibt nutzbar.
 - Ein neues Plugin anbieten heisst: auf dem Lizenzserver einen Eintrag anlegen. Der Core muss dafür nicht neu released werden.
 
