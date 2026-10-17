@@ -62,7 +62,7 @@ Der Core schickt den Schlüssel im Header `X-MLAB-License` und die Website-URL i
 
 - `GET /catalog`: alle aktiven Produkte mit Name, Beschreibung, neuester Version und ob sie für diese Lizenz freigeschaltet sind. Ohne Schlüssel: nur Gratis-Produkte als freigeschaltet. Registriert die Website als Aktivierung, sofern das Website-Limit es erlaubt; sonst Fehler mit verständlicher Meldung.
 - `GET /update/<slug>`: Update-Metadaten im JSON-Format, das Plugin Update Checker v5 erwartet (Version, `download_url`, `requires`, `requires_php`, `tested`, Changelog). Nur für freigeschaltete Produkte; sonst 403.
-- `GET /download/<slug>?t=<signatur>`: liefert das Release-ZIP. Die `download_url` aus `/update` enthält eine HMAC-signierte, kurz gültige Signatur (Slug, Lizenz-ID, Ablaufzeit 10 Minuten). So taucht der Schlüssel nie in einer URL oder einem Log auf. Der Server holt das Asset `<slug>.zip` des neuesten Releases über die GitHub-API und streamt es durch.
+- `GET /download/<slug>?t=<signatur>`: liefert das Release-ZIP. Die `download_url` aus `/update` enthält eine HMAC-signierte, kurz gültige Signatur (Slug, Lizenz-ID, Ablaufzeit 2 Tage, länger als der 12-Stunden-Abstand der WordPress-Update-Prüfung). So taucht der Schlüssel nie in einer URL oder einem Log auf. Der Server holt das Asset `<slug>.zip` des neuesten Releases über die GitHub-API und streamt es durch.
 
 Gratis-Produkte: `/update` und `/download` funktionieren ohne Schlüssel, die Signatur trägt dann die Lizenz-ID 0.
 
