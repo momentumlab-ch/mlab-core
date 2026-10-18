@@ -1,28 +1,68 @@
-# Baut beim Tag vX.Y.Z das Installations-ZIP <slug>.zip und hängt es an das GitHub Release.
-# Vorlage aus dem Skill wordpress-development. Ins Projekt unter .github/workflows/release.yml kopieren.
+# Erstellt bei jedem Merge auf main automatisch ein Release, sobald die Version im Header neu ist.
+# Tag und Release entstehen über die GitHub-API auf dem Commit von main, ohne manuellen Tag-Push.
+# Der Release-Text kommt aus dem Abschnitt der Version in CHANGELOG.md; fehlt er, bricht der Lauf ab.
 name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: ZIP bauen und prüfen
+      - name: Version aus dem Plugin-Header lesen
+        id: version
         env:
           SLUG: ${{ github.event.repository.name }}
-          TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          VERSION="${TAG#v}"
+          HEADER="$SLUG.php"
+          if [ ! -f "$HEADER" ]; then HEADER=style.css; fi
+          VERSION=$(grep -m1 -E '^[[:space:]*]*Version:' "$HEADER" | sed 's/.*Version:[[:space:]]*//; s/[[:space:]]*$//')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Prüfen, ob dieses Release schon existiert
+        id: exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Changelog-Abschnitt lesen
+        if: steps.exists.outputs.skip == 'false'
+        env:
+          SLUG: ${{ github.event.repository.name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          awk -v v="$VERSION" '
+            /^## / { if (found) exit; if ($2 == v) { found = 1; next } }
+            found { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          if [ ! -s "$RUNNER_TEMP/notes.md" ]; then
+            echo "::error::CHANGELOG.md hat keinen Abschnitt '## $VERSION'. Bitte Eintrag ergänzen."
+            exit 1
+          fi
+
+      - name: ZIP bauen und prüfen
+        if: steps.exists.outputs.skip == 'false'
+        env:
+          SLUG: ${{ github.event.repository.name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
           STAGE="$RUNNER_TEMP/stage"
           mkdir -p "$STAGE/$SLUG"
           tar --exclude-from=.distignore -cf - . | tar -xf - -C "$STAGE/$SLUG"
@@ -41,14 +81,14 @@ jobs:
           if [ -f "$STAGE/$SLUG/readme.txt" ]; then
             STABLE=$(grep -m1 -i '^Stable tag:' "$STAGE/$SLUG/readme.txt" | sed 's/^[^:]*:[[:space:]]*//; s/[[:space:]]*$//' || true)
             if [ "$STABLE" != "$VERSION" ]; then
-              echo "::error::Stable tag in readme.txt ($STABLE) passt nicht zum Tag ($VERSION)"
+              echo "::error::Stable tag in readme.txt ($STABLE) passt nicht zur Version ($VERSION)"
               exit 1
             fi
           fi
 
           CONSTANT=$(grep -m1 -oE "define\( *'[A-Z_]*_VERSION', *'[^']*'" "$STAGE/$SLUG/$SLUG.php" "$STAGE/$SLUG/functions.php" 2>/dev/null | sed "s/.*'\([^']*\)'$/\1/" | head -n 1 || true)
           if [ -n "$CONSTANT" ] && [ "$CONSTANT" != "$VERSION" ]; then
-            echo "::error::Versionskonstante ($CONSTANT) passt nicht zum Tag ($VERSION)"
+            echo "::error::Versionskonstante ($CONSTANT) passt nicht zur Version ($VERSION)"
             exit 1
           fi
 
@@ -68,15 +108,15 @@ jobs:
             echo "::warning::ZIP ist grösser als 8 MB ($SIZE Bytes). Viele Hostings haben dort ein Upload-Limit."
           fi
 
-      - name: An Release anhängen
+      - name: Release auf GitHub erstellen
+        if: steps.exists.outputs.skip == 'false'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLUG: ${{ github.event.repository.name }}
-          TAG: ${{ github.ref_name }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$GITHUB_WORKSPACE/$SLUG.zip" --clobber
-          else
-            gh release create "$TAG" "$GITHUB_WORKSPACE/$SLUG.zip" --title "$TAG" --notes "Änderungen: siehe Changelog in readme.txt."
-          fi
+          gh release create "v$VERSION" "$GITHUB_WORKSPACE/$SLUG.zip" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
+            --notes-file "$RUNNER_TEMP/notes.md"
