@@ -103,6 +103,10 @@ Release-Infos von GitHub werden pro Produkt eine Stunde gecacht, damit das API-L
 
 Server-Aufrufe nur im Admin oder im Update-Cron von WordPress, Timeout 5 Sekunden. Ein MomentumLab-Plugin erkennt der Core an der Hauptdatei aus dem Katalog. Antwortet der Server mit «Lizenz ungültig oder abgelaufen», verwirft der Core den Katalog-Cache sofort; ist der Server nicht erreichbar, zeigt er den letzten Stand mit Hinweis.
 
+### Nachtrag 2026-10-21: GitHub-Token auf der Website
+
+Entscheid von Chris: Solange der Lizenzserver nicht läuft, holen Websites Updates aus privaten Repositories direkt bei GitHub. Der Core verwaltet dafür Lese-Tokens (feingranular, nur Contents: Read, mit Ablaufdatum), verschlüsselt in der Datenbank oder als Konstante `MLAB_GITHUB_TOKEN`. Plugins und Themes holen das Token über den Filter `mlab_github_token`. Details: `docs/github-token.md`. Mit dem Lizenzserver bleibt der Weg über `/update` und `/download` das Ziel; dann braucht die Website kein Token mehr.
+
 ## Reihenfolge
 
 1. Lizenzserver: Daten, Admin, REST-API, Release.
