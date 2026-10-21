@@ -14,11 +14,14 @@ use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 add_action( 'init', 'mlab_core_register_updater' );
 
 /**
- * Registers the update checker. Private repos need the token constant in wp-config.php.
+ * Registers the update checker. Private repos take the token from the settings page or a constant in wp-config.php.
  */
 function mlab_core_register_updater(): void {
 	$private = false;
-	$token   = defined( 'MLAB_CORE_GITHUB_TOKEN' ) ? (string) constant( 'MLAB_CORE_GITHUB_TOKEN' ) : '';
+	$token   = mlab_core_github_token( 'momentumlab-ch/mlab-core' );
+	if ( '' === $token && defined( 'MLAB_CORE_GITHUB_TOKEN' ) ) {
+		$token = (string) constant( 'MLAB_CORE_GITHUB_TOKEN' );
+	}
 
 	if ( $private && '' === $token ) {
 		add_action( 'admin_notices', 'mlab_core_missing_token_notice' );
