@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 — 2026-10-21
+
+- Für Entwickler: verschlüsselter Speicher für Zugangsdaten anderer MomentumLab-Plugins (mlab_core_secret_set, mlab_core_secret_get, mlab_core_secret_exists), gleiche Verschlüsselung wie die GitHub-Tokens. MomentumLab Insights speichert darin den Google-Zugang.
+
 ## 0.2.0 — 2026-10-21
 
 - GitHub-Zugang für Updates: Lese-Tokens für private Repositories von MomentumLab im Backend eintragen (MomentumLab › GitHub-Zugang), pro Organisation oder pro Repository. Die Tokens werden mit den Sicherheitsschlüsseln der Website verschlüsselt gespeichert und nie angezeigt, nur die letzten vier Zeichen. «Verbindung testen» zeigt, ob GitHub das Token annimmt, und das Ablaufdatum.

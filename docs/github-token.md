@@ -33,3 +33,16 @@ github.com › Profilbild › Settings › Developer settings › Personal acces
 - Expiration: z. B. 1 Jahr
 - Repository access: Only select repositories (nur die privaten Repositories der Website)
 - Repository permissions: Contents: Read-only (Metadata: Read-only kommt automatisch)
+
+## Weitere Geheimnisse
+
+Andere MomentumLab-Plugins speichern Zugangsdaten über dieselbe Verschlüsselung:
+
+```php
+if ( function_exists( 'mlab_core_secret_set' ) ) {
+	mlab_core_secret_set( '<plugin-slug>/<name>', $value ); // Leerer Wert löscht.
+}
+$value = function_exists( 'mlab_core_secret_get' ) ? mlab_core_secret_get( '<plugin-slug>/<name>' ) : '';
+```
+
+Option `mlab_core_secrets`, ohne Autoload, Werte nur verschlüsselt.
