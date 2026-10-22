@@ -45,11 +45,11 @@ function mlab_core_health_settings(): array {
 /**
  * Gültige Empfänger, höchstens 5.
  *
- * @param string $list Liste (Komma, Semikolon, Zeilenumbruch).
+ * @param string $value Liste (Komma, Semikolon, Zeilenumbruch).
  * @return list<string>
  */
-function mlab_core_health_recipients( string $list ): array {
-	$parts = preg_split( '/[\s,;]+/', $list );
+function mlab_core_health_recipients( string $value ): array {
+	$parts = preg_split( '/[\s,;]+/', $value );
 	$mails = array_filter( array_map( 'sanitize_email', is_array( $parts ) ? $parts : array() ), 'is_email' );
 	return array_slice( array_values( array_unique( $mails ) ), 0, 5 );
 }
@@ -302,7 +302,7 @@ function mlab_core_health_run(): array {
  * Sendet den Alarm an die Empfänger.
  *
  * @param array<string,array{label:string,state:string,text:string}> $checks Ergebnisse.
- * @param list<string>                                                $keys   Zu meldende Prüfungen.
+ * @param string[]                                                   $keys   Zu meldende Prüfungen.
  */
 function mlab_core_health_alarm( array $checks, array $keys ): bool {
 	$to = mlab_core_health_recipients( mlab_core_health_settings()['alarm_to'] );
