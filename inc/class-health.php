@@ -50,7 +50,7 @@ final class Health {
 	public static function to_report( array $now, array $reported, int $time ): array {
 		$keys = array();
 		foreach ( $now as $key => $check ) {
-			if ( 'bad' === ( $check['state'] ?? '' ) && $time - (int) ( $reported[ $key ] ?? 0 ) >= self::REPEAT ) {
+			if ( 'bad' === ( $check['state'] ?? '' ) && ( ! isset( $reported[ $key ] ) || $time - (int) $reported[ $key ] >= self::REPEAT ) ) {
 				$keys[] = (string) $key;
 			}
 		}
