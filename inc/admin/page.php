@@ -162,6 +162,7 @@ function mlab_core_render_page(): void {
 		echo '<div class="notice notice-warning"><p>' . esc_html( $catalog['error'] ) . '</p></div>';
 	}
 	mlab_core_render_key_box();
+	mlab_core_render_health_box();
 	mlab_core_render_token_box();
 	echo '<div class="mlab-core-grid">';
 	foreach ( $catalog['products'] as $product ) {

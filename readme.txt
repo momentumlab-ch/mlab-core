@@ -3,7 +3,7 @@ Contributors: momentumlab
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,9 @@ Mit deinem Lizenzschlüssel zeigt MomentumLab Core alle freigeschalteten Plugins
 Der Schlüssel kann auch als Konstante MLAB_CORE_LICENSE_KEY in der wp-config.php stehen.
 
 == Changelog ==
+
+= 0.4.0 =
+* Website-Gesundheit: jeden Morgen um 06:00 prüft Core, ob die Startseite antwortet, wie lange das SSL-Zertifikat gilt, welche Updates anstehen, ob PHP-Fehler im debug.log stehen, wann das letzte Backup lief (UpdraftPlus, Jetpack) und ob auffällig viele 404 auftreten (MomentumLab SEO). Ergebnis auf der Seite MomentumLab, Knopf «Jetzt prüfen». Alarm per E-Mail bei einem neuen Problem, höchstens einmal pro Tag und Problem; Empfänger leer = aus. Für Entwickler: mlab_core_health() und der Filter mlab_core_health_checks.
 
 = 0.3.0 =
 * Für Entwickler: verschlüsselter Speicher für Zugangsdaten anderer MomentumLab-Plugins (mlab_core_secret_set, mlab_core_secret_get, mlab_core_secret_exists), gleiche Verschlüsselung wie die GitHub-Tokens. MomentumLab Insights speichert darin den Google-Zugang.
