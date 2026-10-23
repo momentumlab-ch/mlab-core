@@ -1,9 +1,9 @@
-.git
-.github
+./.git
+./.github
 .gitignore
 .distignore
-node_modules
-tests
+./node_modules
+./tests
 phpcs.xml.dist
 composer.json
 composer.lock
@@ -14,6 +14,8 @@ package-lock.json
 wp-config.php
 *.log
 *.map
-docs
+./docs
 phpunit.xml.dist
 CHANGELOG.md
+./vendor
+./.momentumlab

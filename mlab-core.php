@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       MomentumLab Core
  * Description:       Zeigt die MomentumLab-Plugins mit deinem Lizenzschlüssel an, installiert und aktiviert sie mit einem Klick und hält sie aktuell. Verwaltet die GitHub-Lese-Tokens für Updates aus privaten Repositories.
- * Version:           0.4.0
+ * Version:           0.4.1
  * Requires at least: 6.4
  * Requires PHP:      8.0
  * Author:            MomentumLab
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MLAB_CORE_VERSION', '0.4.0' );
+define( 'MLAB_CORE_VERSION', '0.4.1' );
 define( 'MLAB_CORE_FILE', __FILE__ );
 define( 'MLAB_CORE_DIR', plugin_dir_path( __FILE__ ) );
 
