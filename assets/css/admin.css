@@ -71,3 +71,27 @@
 		width: 100%;
 	}
 }
+
+.mlab-core-health {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.mlab-core-health.is-good {
+	background: #edfaef;
+	color: #00631d;
+}
+
+.mlab-core-health.is-warn {
+	background: #fcf9e8;
+	color: #8a6100;
+}
+
+.mlab-core-health.is-bad {
+	background: #fcf0f1;
+	color: #a00;
+}
