@@ -97,6 +97,10 @@ jobs:
             echo "::error::ZIP enthält eine Konfigurations- oder Secret-Datei (wp-config, .env)"
             exit 1
           fi
+          if ! unzip -Z1 "$GITHUB_WORKSPACE/$SLUG.zip" | grep -qx "$SLUG/lib/plugin-update-checker/vendor/PucReadmeParser.php"; then
+            echo "::error::Im ZIP fehlt lib/plugin-update-checker/vendor/PucReadmeParser.php. Prüfe .distignore: Ordner wie vendor müssen mit ./ beginnen."
+            exit 1
+          fi
           TOP=$(unzip -Z1 "$GITHUB_WORKSPACE/$SLUG.zip" | cut -d/ -f1 | sort -u)
           if [ "$TOP" != "$SLUG" ]; then
             echo "::error::ZIP hat nicht genau einen Ordner oben namens $SLUG: $TOP"
