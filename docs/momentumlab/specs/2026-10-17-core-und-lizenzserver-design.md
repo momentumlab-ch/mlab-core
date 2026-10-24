@@ -62,7 +62,9 @@ Der Core schickt den Schlüssel im Header `X-MLAB-License` und die Website-URL i
 
 - `GET /catalog`: alle aktiven Produkte mit Name, Beschreibung, neuester Version und ob sie für diese Lizenz freigeschaltet sind. Ohne Schlüssel: nur Gratis-Produkte als freigeschaltet. Registriert die Website als Aktivierung, sofern das Website-Limit es erlaubt; sonst Fehler mit verständlicher Meldung.
 - `GET /update/<slug>`: Update-Metadaten im JSON-Format, das Plugin Update Checker v5 erwartet (Version, `download_url`, `requires`, `requires_php`, `tested`, Changelog). Nur für freigeschaltete Produkte; sonst 403.
-- `GET /download/<slug>?t=<signatur>`: liefert das Release-ZIP. Die `download_url` aus `/update` enthält eine HMAC-signierte, kurz gültige Signatur (Slug, Lizenz-ID, Ablaufzeit 2 Tage, länger als der 12-Stunden-Abstand der WordPress-Update-Prüfung). So taucht der Schlüssel nie in einer URL oder einem Log auf. Der Server holt das Asset `<slug>.zip` des neuesten Releases über die GitHub-API und streamt es durch.
+- `GET /download/<slug>?t=<signatur>`: liefert das Release-ZIP. Die `download_url` aus `/update` enthält eine HMAC-signierte, kurz gültige Signatur (Slug, Lizenz-ID, Ablaufzeit 2 Tage, länger als der 12-Stunden-Abstand der WordPress-Update-Prüfung). So taucht der Schlüssel nie in einer URL oder einem Log auf. Der Server holt über die GitHub-API die kurzlebige Download-URL des Assets `<slug>.zip` im neuesten Release und antwortet mit 302 auf diese URL.
+
+  Notiz (2026-10-24, Entscheid von Chris): Der Redirect ersetzt das ursprünglich geplante Durchstreamen. Das ZIP läuft so nicht durch PHP auf momentumlab.ch, also keine Speicher- und Laufzeitlimits und keine Last auf dem Hosting. Die GitHub-URL ist kurzlebig und enthält das GitHub-Token nicht. Lizenz und Signatur werden vor dem Redirect geprüft; eine gesperrte Lizenz bekommt auch mit gültiger Signatur 403.
 
 Gratis-Produkte: `/update` und `/download` funktionieren ohne Schlüssel, die Signatur trägt dann die Lizenz-ID 0.
 
@@ -74,6 +76,8 @@ Als Release gilt das neueste veröffentlichte Release (keine Entwürfe, keine Pr
 
 - `MLAB_LS_GITHUB_TOKEN`: fine-grained Token, Leserecht *Contents* auf die Plugin-Repos.
 - `MLAB_LS_SIGNING_KEY`: Schlüssel für die Download-Signatur.
+
+Seit 0.2.0 lassen sich beide Werte auch im Backend eintragen; sie werden dann mit libsodium verschlüsselt in der Datenbank gespeichert. Konstanten in der `wp-config.php` haben Vorrang. Der Schlüssel für die Verschlüsselung kommt aus dem WordPress-Salt (`AUTH_KEY` und `AUTH_SALT`). Ein Salt-Wechsel macht die gespeicherten Secrets unlesbar; der Server behandelt sie dann als fehlend. Der Signierschlüssel wird beim nächsten Aufruf des Backends neu erzeugt (bis dahin 503, danach sind alte Download-Links ungültig). Das GitHub-Token muss im Backend neu eingetragen werden, sonst gibt es für private Produkte keine Updates.
 
 Release-Infos von GitHub werden pro Produkt eine Stunde gecacht, damit das API-Limit nie erreicht wird.
 
