@@ -79,6 +79,7 @@ if ( ! function_exists( 'home_url' ) ) {
 }
 
 require_once dirname( __DIR__ ) . '/inc/options.php';
+require_once dirname( __DIR__ ) . '/inc/products.php';
 
 foreach ( glob( dirname( __DIR__ ) . '/inc/class-*.php' ) as $class_file ) {
 	require_once $class_file;

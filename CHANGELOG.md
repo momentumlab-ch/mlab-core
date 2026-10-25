@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2 — 2026-10-25
+
+- Für Entwickler: mlab_core_product_unlocked() sagt, ob die Lizenz dieser Website ein Produkt freischaltet, zum Beispiel die Pro-Funktionen von MomentumLab Social Wall.
+
 ## 0.4.1 — 2026-10-23
 
 - Updates über GitHub funktionieren wieder zuverlässig: Ein Teil der Update-Bibliothek fehlte im Installationspaket.
