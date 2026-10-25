@@ -3,7 +3,7 @@ Contributors: momentumlab
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,16 @@ Mit deinem Lizenzschlüssel zeigt MomentumLab Core alle freigeschalteten Plugins
 
 Der Schlüssel kann auch als Konstante MLAB_CORE_LICENSE_KEY in der wp-config.php stehen.
 
+== Für Entwickler ==
+
+* `mlab_core_product_unlocked( string $slug ): bool` sagt, ob die Lizenz dieser Website ein Produkt freischaltet. Das ist der Fall, wenn das Produkt im gespeicherten Katalog steht und dort als freigeschaltet markiert ist. Die Funktion liest nur den gespeicherten Katalog, ohne Anfrage an den Server, und funktioniert auch im Frontend. Vor dem Aufruf mit `function_exists()` prüfen, falls Core fehlen kann.
+* Bekanntes Verhalten: Der Katalog wird nur im Backend neu geladen (spätestens nach 12 Stunden, oder mit «Neu laden»). Nach einer Kündigung oder einer ungültig gewordenen Lizenz bleibt ein Produkt deshalb freigeschaltet, bis der Katalog das nächste Mal abgerufen wird. Erst dann liefert die Funktion false.
+* `mlab_core_license_key()` gibt den Lizenzschlüssel zurück, der Filter `mlab_core_manages_plugin` sagt einem Plugin, ob Core seine Updates liefert.
+
 == Changelog ==
+
+= 0.4.2 =
+* Für Entwickler: mlab_core_product_unlocked() sagt, ob die Lizenz dieser Website ein Produkt freischaltet, zum Beispiel die Pro-Funktionen von MomentumLab Social Wall.
 
 = 0.4.1 =
 * Updates über GitHub funktionieren wieder zuverlässig: Ein Teil der Update-Bibliothek fehlte im Installationspaket.
