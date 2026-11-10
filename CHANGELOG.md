@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2 — 2026-11-10
+
+- Korrekte Plugin-Version in den Übersetzungsdateien.
+
+## 0.5.1 — 2026-11-10
+
+- Lizenz-Änderungen auf dem MomentumLab-Lizenzserver kommen jetzt sofort an (Lizenz-Bibliothek 1.1.0).
+
 ## 0.5.0 — 2026-11-10
 
 - Neues Design: Übersicht mit Lizenz, Website-Gesundheit, Plugins und einer Liste „Zu tun“ mit direkten Links. Plugins mit Schalter, Gesundheit und Einstellungen auf eigenen Seiten, auf dem Handy bedienbar.

@@ -3,7 +3,7 @@ Contributors: momentumlab
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 0.5.0
+Stable tag: 0.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,12 @@ Der Schlüssel kann auch als Konstante MLAB_CORE_LICENSE_KEY in der wp-config.ph
 * `mlab_core_license_key()` gibt den Lizenzschlüssel zurück, der Filter `mlab_core_manages_plugin` sagt einem Plugin, ob Core seine Updates liefert.
 
 == Changelog ==
+
+= 0.5.2 =
+* Korrekte Plugin-Version in den Übersetzungsdateien.
+
+= 0.5.1 =
+* Lizenz-Änderungen auf dem MomentumLab-Lizenzserver kommen jetzt sofort an (Lizenz-Bibliothek 1.1.0).
 
 = 0.5.0 =
 * Neues Design: Übersicht mit Lizenz, Website-Gesundheit, Plugins und einer Liste „Zu tun“ mit direkten Links. Plugins mit Schalter, Gesundheit und Einstellungen auf eigenen Seiten, auf dem Handy bedienbar.
