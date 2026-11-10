@@ -86,7 +86,7 @@ function mlab_core_overview_health_card(): void {
 	$issues = count( mlab_core_health_issues( $health ) );
 	$total  = count( $health['checks'] );
 	$tone   = 'bad' === $health['state'] ? 'bad' : ( $issues ? 'warn' : 'good' );
-	$badge = mlab_core_health_badge_text( $health, $issues );
+	$badge  = mlab_core_health_badge_text( $health, $issues );
 	/* translators: 1: number of fine checks, 2: number of all checks */
 	$count = sprintf( __( '%1$d of %2$d fine', 'mlab-core' ), $total - $issues, $total );
 	mlab_core_summary_card( $url, $title, $tone, $badge, array( $count, mlab_core_health_when( $health['time'] ) ) );
