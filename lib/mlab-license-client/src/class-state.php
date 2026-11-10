@@ -35,6 +35,11 @@ final class State {
 	public const RETRY = 300;
 
 	/**
+	 * Minimum seconds between two checks triggered by the refresh route.
+	 */
+	public const PING_INTERVAL = 60;
+
+	/**
 	 * Empty state with all keys.
 	 *
 	 * @return array{status:string,message:string,products:array,fetched_at:int,failed_at:int,last_ok:int}
@@ -137,6 +142,19 @@ final class State {
 			return $now - $state['failed_at'] >= self::RETRY;
 		}
 		return $now - $state['fetched_at'] >= self::TTL;
+	}
+
+	/**
+	 * Whether the refresh route may trigger a check: at most one per PING_INTERVAL.
+	 *
+	 * @param mixed $last Stored time of the last trigger; anything but a positive number counts as never.
+	 * @param int   $now  Current Unix time.
+	 */
+	public static function ping_allowed( $last, int $now ): bool {
+		if ( ! is_numeric( $last ) || (int) $last <= 0 ) {
+			return true;
+		}
+		return $now - (int) $last >= self::PING_INTERVAL;
 	}
 
 	/**

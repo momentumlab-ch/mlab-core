@@ -78,4 +78,4 @@ if ( ! class_exists( 'MLAB_License_Client_Registry', false ) ) {
 	add_action( 'plugins_loaded', 'mlab_license', 0 );
 }
 
-MLAB_License_Client_Registry::add( '1.0.0', __DIR__ );
+MLAB_License_Client_Registry::add( '1.1.0', __DIR__ );
