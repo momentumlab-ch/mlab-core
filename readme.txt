@@ -3,7 +3,7 @@ Contributors: momentumlab
 Requires at least: 6.4
 Tested up to: 6.7
 Requires PHP: 8.0
-Stable tag: 0.4.2
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,13 @@ Der Schlüssel kann auch als Konstante MLAB_CORE_LICENSE_KEY in der wp-config.ph
 * `mlab_core_license_key()` gibt den Lizenzschlüssel zurück, der Filter `mlab_core_manages_plugin` sagt einem Plugin, ob Core seine Updates liefert.
 
 == Changelog ==
+
+= 0.5.0 =
+* Neues Design: Übersicht mit Lizenz, Website-Gesundheit, Plugins und einer Liste „Zu tun“ mit direkten Links. Plugins mit Schalter, Gesundheit und Einstellungen auf eigenen Seiten, auf dem Handy bedienbar.
+* Neues Menü „MomentumLab“ mit eigenem Symbol. Kleine MomentumLab-Plugins erscheinen darunter (mlab_core_add_page()), MomentumLab SEO direkt darunter.
+* Ein Lizenzschlüssel für alle MomentumLab-Plugins: der Core nutzt den gemeinsamen MomentumLab License Client. Ein gespeicherter Schlüssel wird übernommen. Andere Plugins verlinken für den Schlüssel auf die Einstellungen des Core.
+* Freischaltungen ohne Download (z. B. SEO Pro) erscheinen unter „Enthaltene Freischaltungen“.
+* Englisch ist die Quellsprache, mit Übersetzungen auf Deutsch (Deutschland und Schweiz), Französisch und Italienisch.
 
 = 0.4.2 =
 * Für Entwickler: mlab_core_product_unlocked() sagt, ob die Lizenz dieser Website ein Produkt freischaltet, zum Beispiel die Pro-Funktionen von MomentumLab Social Wall.

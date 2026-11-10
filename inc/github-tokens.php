@@ -101,22 +101,22 @@ function mlab_core_github_token_check( string $token, string $scope ): array {
 	if ( is_wp_error( $response ) ) {
 		return array(
 			'ok'      => false,
-			'message' => __( 'GitHub ist gerade nicht erreichbar. Bitte später nochmals testen.', 'mlab-core' ),
+			'message' => __( 'GitHub is not reachable right now. Please try again later.', 'mlab-core' ),
 			'expires' => '',
 		);
 	}
 	$code     = (int) wp_remote_retrieve_response_code( $response );
 	$expires  = (string) wp_remote_retrieve_header( $response, 'github-authentication-token-expiration' );
 	$messages = array(
-		200 => __( 'Verbindung klappt.', 'mlab-core' ),
-		401 => __( 'GitHub lehnt das Token ab: falsch, abgelaufen oder widerrufen. Bitte ein neues Token eintragen.', 'mlab-core' ),
-		403 => __( 'Das Token hat keinen Lesezugriff. Bitte bei GitHub «Contents: Read» freigeben.', 'mlab-core' ),
-		404 => __( 'Das Repository ist mit diesem Token nicht sichtbar. Bitte bei GitHub den Zugriff auf dieses Repository erlauben.', 'mlab-core' ),
+		200 => __( 'Connection works.', 'mlab-core' ),
+		401 => __( 'GitHub rejects the token: it is wrong, expired or revoked. Please enter a new token.', 'mlab-core' ),
+		403 => __( 'The token has no read access. Please grant "Contents: Read" on GitHub.', 'mlab-core' ),
+		404 => __( 'The repository is not visible with this token. Please allow access to this repository on GitHub.', 'mlab-core' ),
 	);
 	return array(
 		'ok'      => 200 === $code,
 		/* translators: %d: HTTP status code */
-		'message' => $messages[ $code ] ?? sprintf( __( 'Unerwartete Antwort von GitHub (Status %d).', 'mlab-core' ), $code ),
+		'message' => $messages[ $code ] ?? sprintf( __( 'Unexpected response from GitHub (status %d).', 'mlab-core' ), $code ),
 		'expires' => '' !== $expires ? (string) strtotime( $expires ) : '',
 	);
 }

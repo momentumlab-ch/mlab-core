@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 — 2026-11-10
+
+- Neues Design: Übersicht mit Lizenz, Website-Gesundheit, Plugins und einer Liste „Zu tun“ mit direkten Links. Plugins mit Schalter, Gesundheit und Einstellungen auf eigenen Seiten, auf dem Handy bedienbar.
+- Neues Menü „MomentumLab“ mit eigenem Symbol. Kleine MomentumLab-Plugins erscheinen darunter (mlab_core_add_page()), MomentumLab SEO direkt darunter.
+- Ein Lizenzschlüssel für alle MomentumLab-Plugins: der Core nutzt den gemeinsamen MomentumLab License Client. Ein gespeicherter Schlüssel wird übernommen. Andere Plugins verlinken für den Schlüssel auf die Einstellungen des Core.
+- Freischaltungen ohne Download (z. B. SEO Pro) erscheinen unter „Enthaltene Freischaltungen“.
+- Englisch ist die Quellsprache, mit Übersetzungen auf Deutsch (Deutschland und Schweiz), Französisch und Italienisch.
+
 ## 0.4.2 — 2026-10-25
 
 - Für Entwickler: mlab_core_product_unlocked() sagt, ob die Lizenz dieser Website ein Produkt freischaltet, zum Beispiel die Pro-Funktionen von MomentumLab Social Wall.

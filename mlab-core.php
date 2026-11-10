@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:       MomentumLab Core
- * Description:       Zeigt die MomentumLab-Plugins mit deinem Lizenzschlüssel an, installiert und aktiviert sie mit einem Klick und hält sie aktuell. Verwaltet die GitHub-Lese-Tokens für Updates aus privaten Repositories.
- * Version:           0.4.2
+ * Description:       Shows the MomentumLab plugins with your license key, installs and activates them with one click, and keeps them up to date. Manages the GitHub read tokens for updates from private repositories.
+ * Version:           0.5.0
  * Requires at least: 6.4
  * Requires PHP:      8.0
  * Author:            MomentumLab
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MLAB_CORE_VERSION', '0.4.2' );
+define( 'MLAB_CORE_VERSION', '0.5.0' );
 define( 'MLAB_CORE_FILE', __FILE__ );
 define( 'MLAB_CORE_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -35,11 +35,21 @@ require_once MLAB_CORE_DIR . 'inc/products.php';
 require_once MLAB_CORE_DIR . 'inc/class-health.php';
 require_once MLAB_CORE_DIR . 'inc/health.php';
 
+add_action(
+	'init',
+	static function () {
+		load_plugin_textdomain( 'mlab-core', false, dirname( plugin_basename( MLAB_CORE_FILE ) ) . '/languages' );
+	}
+);
+
 if ( is_admin() ) {
 	require_once MLAB_CORE_DIR . 'inc/admin/installer.php';
 	require_once MLAB_CORE_DIR . 'inc/admin/actions.php';
 	require_once MLAB_CORE_DIR . 'inc/admin/menu.php';
 	require_once MLAB_CORE_DIR . 'inc/admin/page.php';
+	require_once MLAB_CORE_DIR . 'inc/admin/overview.php';
+	require_once MLAB_CORE_DIR . 'inc/admin/plugins.php';
+	require_once MLAB_CORE_DIR . 'inc/admin/settings.php';
 	require_once MLAB_CORE_DIR . 'inc/admin/tokens.php';
 	require_once MLAB_CORE_DIR . 'inc/admin/health.php';
 }

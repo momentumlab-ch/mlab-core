@@ -52,6 +52,6 @@ function mlab_core_missing_token_notice(): void {
 	}
 	printf(
 		'<div class="notice notice-warning"><p>%s</p></div>',
-		esc_html__( 'Updates sind nicht aktiv: In wp-config.php fehlt die Konstante MLAB_CORE_GITHUB_TOKEN.', 'mlab-core' )
+		esc_html__( 'Updates are not active: please enter a GitHub access token under MomentumLab › Settings.', 'mlab-core' )
 	);
 }

@@ -153,8 +153,9 @@ function mlab_core_render_plugin_control( array $row ): void {
 function mlab_core_render_plugin_card( array $row ): void {
 	$product = $row['product'];
 	$version = '' !== $row['have'] ? $row['have'] : (string) ( $product['version'] ?? '' );
+	$status  = mlab_core_plugin_status_text( $row );
 	/* translators: 1: version number, 2: status such as "Active" */
-	$meta = sprintf( __( 'Version %1$s · %2$s', 'mlab-core' ), $version, mlab_core_plugin_status_text( $row ) );
+	$meta = '' === $version ? $status : sprintf( __( 'Version %1$s · %2$s', 'mlab-core' ), $version, $status );
 	echo '<article class="mlab-card mlab-plugin"><div class="mlab-plugin__head"><h2>' . esc_html( (string) $product['name'] ) . '</h2>';
 	mlab_core_render_plugin_control( $row );
 	echo '</div><p class="mlab-muted">' . esc_html( $meta ) . '</p>';
