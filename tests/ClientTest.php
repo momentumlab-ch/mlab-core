@@ -2,180 +2,129 @@
 use MomentumLab\Core\Client;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Stand-in for mlab_license(): a fixed state, records refresh calls.
+ */
+final class FakeLicense {
+
+	public array $state;
+	public array $refreshes = array();
+
+	public function __construct( array $state ) {
+		$this->state = $state;
+	}
+
+	public function refresh( bool $force = false ): array {
+		$this->refreshes[] = $force;
+		return $this->state;
+	}
+
+	public function products(): array {
+		return $this->state['products'];
+	}
+
+	public function server_url(): string {
+		return 'https://momentumlab.ch';
+	}
+
+	public function request_args(): array {
+		return array(
+			'timeout' => 5,
+			'headers' => array( 'X-MLAB-Site' => 'https://site.test/', 'X-MLAB-License' => 'MLAB-TEST' ),
+		);
+	}
+}
+
 final class ClientTest extends TestCase {
 
 	protected function setUp(): void {
 		$GLOBALS['mlab_core_http_queue'] = array();
 		$GLOBALS['mlab_core_http_log']   = array();
-		$GLOBALS['mlab_core_options']    = array();
-		Client::flush_cache();
 	}
 
-	private function queue_catalog( array $products ): void {
-		$GLOBALS['mlab_core_http_queue'][] = array(
-			'code' => 200,
-			'body' => wp_json_encode( array( 'products' => $products ) ),
-		);
-	}
-
-	private function product( string $slug = 'mlab-seo', string $main_file = 'mlab-seo/mlab-seo.php' ): array {
+	private function product( string $slug, string $main_file, bool $unlocked = true ): array {
 		return array(
 			'slug'        => $slug,
-			'name'        => 'SEO',
-			'description' => 'Beschreibung',
+			'name'        => $slug,
+			'description' => '',
 			'version'     => '1.0.0',
 			'main_file'   => $main_file,
-			'unlocked'    => true,
+			'unlocked'    => $unlocked,
 		);
 	}
 
-	public function test_success_stores_and_returns_products(): void {
-		$this->queue_catalog( array( $this->product() ) );
-		$result = ( new Client() )->catalog();
-		$this->assertCount( 1, $result['products'] );
-		$this->assertSame( '', $result['error'] );
-		$this->assertGreaterThan( 0, $result['fetched_at'] );
-		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/catalog', $GLOBALS['mlab_core_http_log'][0]['url'] );
-		$this->assertArrayHasKey( 'mlab_core_catalog', $GLOBALS['mlab_core_options'] );
-	}
-
-	public function test_second_call_within_ttl_makes_no_request(): void {
-		$this->queue_catalog( array( $this->product() ) );
-		$client = new Client();
-		$client->catalog();
-		$again = $client->catalog();
-		$this->assertCount( 1, $GLOBALS['mlab_core_http_log'] );
-		$this->assertCount( 1, $again['products'] );
-	}
-
-	public function test_refresh_forces_a_request(): void {
-		$this->queue_catalog( array( $this->product() ) );
-		$this->queue_catalog( array( $this->product(), $this->product( 'mlab-two', 'mlab-two/mlab-two.php' ) ) );
-		$client = new Client();
-		$client->catalog();
-		$result = $client->catalog( true );
-		$this->assertCount( 2, $GLOBALS['mlab_core_http_log'] );
-		$this->assertCount( 2, $result['products'] );
-	}
-
-	public function test_invalid_license_discards_catalog_and_shows_server_message(): void {
-		$this->queue_catalog( array( $this->product() ) );
-		$client = new Client();
-		$client->catalog();
-		$GLOBALS['mlab_core_http_queue'][] = array(
-			'code' => 401,
-			'body' => wp_json_encode(
-				array(
-					'code'    => 'mlab_ls_invalid_license',
-					'message' => 'Der Lizenzschlüssel ist ungültig.',
-					'data'    => array( 'status' => 401 ),
-				)
-			),
+	private function client( string $status = 'valid', string $message = '' ): array {
+		$license = new FakeLicense(
+			array(
+				'status'     => $status,
+				'message'    => $message,
+				'fetched_at' => 100,
+				'products'   => array(
+					$this->product( 'mlab-seo', 'mlab-seo/mlab-seo.php' ),
+					$this->product( 'mlab-seo-pro', '' ),
+					$this->product( 'evil', '../../wp-config.php' ),
+					$this->product( 'mlab-hub', 'mlab-hub/mlab-hub.php', false ),
+				),
+			)
 		);
-		$result = $client->catalog( true );
-		$this->assertSame( array(), $result['products'] );
-		$this->assertSame( 'Der Lizenzschlüssel ist ungültig.', $result['error'] );
-		$this->assertNull( $client->product( 'mlab-seo' ) );
+		return array( new Client( $license ), $license );
 	}
 
-	public function test_timeout_keeps_old_products_with_default_message(): void {
-		$this->queue_catalog( array( $this->product() ) );
-		$client = new Client();
+	public function test_catalog_lists_only_installable_plugins(): void {
+		list( $client ) = $this->client();
+		$catalog        = $client->catalog();
+		$this->assertSame( array( 'mlab-seo', 'mlab-hub' ), array_column( $catalog['products'], 'slug' ) );
+		$this->assertSame( '', $catalog['error'] );
+		$this->assertSame( 100, $catalog['fetched_at'] );
+	}
+
+	public function test_unlocks_are_unlocked_products_without_plugin(): void {
+		list( $client ) = $this->client();
+		$this->assertSame( array( 'mlab-seo-pro' ), array_column( $client->unlocks(), 'slug' ) );
+	}
+
+	public function test_refresh_is_passed_through(): void {
+		list( $client, $license ) = $this->client();
 		$client->catalog();
-		$result = $client->catalog( true );
-		$this->assertCount( 1, $result['products'] );
-		$this->assertStringContainsString( 'nicht erreichbar', $result['error'] );
+		$client->catalog( true );
+		$this->assertSame( array( false, true ), $license->refreshes );
+	}
+
+	public function test_invalid_license_shows_server_message(): void {
+		list( $client ) = $this->client( 'invalid', 'Expired.' );
+		$this->assertSame( 'Expired.', $client->catalog()['error'] );
+	}
+
+	public function test_product_lookup_never_returns_unsafe_entries(): void {
+		list( $client ) = $this->client();
 		$this->assertNotNull( $client->product( 'mlab-seo' ) );
-	}
-
-	public function test_failed_refresh_is_not_retried_on_every_call(): void {
-		$client = new Client();
-		$client->catalog();
-		$client->catalog();
-		$this->assertCount( 1, $GLOBALS['mlab_core_http_log'] );
-	}
-
-	public function test_server_error_without_message_uses_default_text(): void {
-		$GLOBALS['mlab_core_http_queue'][] = array(
-			'code' => 500,
-			'body' => '<html>boom</html>',
-		);
-		$result = ( new Client() )->catalog();
-		$this->assertStringContainsString( 'nicht erreichbar', $result['error'] );
-	}
-
-	public function test_headers_without_key_have_no_license_header(): void {
-		$args = ( new Client() )->request_args();
-		$this->assertSame( 5, $args['timeout'] );
-		$this->assertArrayNotHasKey( 'X-MLAB-License', $args['headers'] );
-		$this->assertSame( 'https://site.test', $args['headers']['X-MLAB-Site'] );
-	}
-
-	public function test_headers_with_key_send_license(): void {
-		$GLOBALS['mlab_core_options']['mlab_core_license_key'] = 'MLAB-GOOD';
-		$args = ( new Client() )->request_args();
-		$this->assertSame( 'MLAB-GOOD', $args['headers']['X-MLAB-License'] );
-	}
-
-	public function test_product_with_unsafe_main_file_is_dropped(): void {
-		$this->queue_catalog( array( $this->product(), $this->product( 'evil', '../x/y.php' ) ) );
-		$result = ( new Client() )->catalog();
-		$this->assertSame( array( 'mlab-seo' ), array_column( $result['products'], 'slug' ) );
-		$this->assertNull( ( new Client() )->product( 'evil' ) );
-	}
-
-	public function test_update_info_returns_decoded_json(): void {
-		$GLOBALS['mlab_core_http_queue'][] = array(
-			'code' => 200,
-			'body' => wp_json_encode( array( 'download_url' => 'https://momentumlab.ch/dl' ) ),
-		);
-		$info = ( new Client() )->update_info( 'mlab-seo' );
-		$this->assertSame( 'https://momentumlab.ch/dl', $info['download_url'] );
-		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/update/mlab-seo', $GLOBALS['mlab_core_http_log'][0]['url'] );
-	}
-
-	public function test_update_info_returns_error_on_failure(): void {
-		$GLOBALS['mlab_core_http_queue'][] = array(
-			'code' => 403,
-			'body' => wp_json_encode( array( 'message' => 'Zu viele Websites.' ) ),
-		);
-		$info = ( new Client() )->update_info( 'mlab-seo' );
-		$this->assertInstanceOf( WP_Error::class, $info );
-		$this->assertSame( 'Zu viele Websites.', $info->message );
+		$this->assertNull( $client->product( 'evil' ) );
+		$this->assertNull( $client->product( 'mlab-seo-pro' ) );
 	}
 
 	public function test_update_url_encodes_the_slug(): void {
-		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/update/mlab-seo', ( new Client() )->update_url( 'mlab-seo' ) );
-		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/update/a%2Fb', ( new Client() )->update_url( 'a/b' ) );
+		list( $client ) = $this->client();
+		$this->assertSame( 'https://momentumlab.ch/wp-json/mlab-ls/v1/update/a%2Fb', $client->update_url( 'a/b' ) );
 	}
 
-	public function test_apply_request_args_merges_timeout_and_headers(): void {
-		$GLOBALS['mlab_core_options']['mlab_core_license_key'] = 'MLAB-GOOD';
-		$args = ( new Client() )->apply_request_args(
-			array(
-				'timeout' => 99,
-				'sslverify' => true,
-				'headers' => array( 'Accept' => 'application/json' ),
-			)
-		);
+	public function test_update_info_sends_license_headers_and_decodes_json(): void {
+		list( $client )                  = $this->client();
+		$GLOBALS['mlab_core_http_queue'][] = array( 'code' => 200, 'body' => '{"download_url":"https://x"}' );
+		$this->assertSame( 'https://x', $client->update_info( 'mlab-seo' )['download_url'] );
+		$this->assertSame( 'MLAB-TEST', $GLOBALS['mlab_core_http_log'][0]['args']['headers']['X-MLAB-License'] );
+	}
+
+	public function test_update_info_error_uses_server_message(): void {
+		list( $client )                  = $this->client();
+		$GLOBALS['mlab_core_http_queue'][] = array( 'code' => 403, 'body' => '{"message":"Not unlocked."}' );
+		$this->assertSame( 'Not unlocked.', $client->update_info( 'mlab-seo' )->message );
+	}
+
+	public function test_apply_request_args_merges_headers(): void {
+		list( $client ) = $this->client();
+		$args           = $client->apply_request_args( array( 'headers' => array( 'Accept' => 'json' ) ) );
 		$this->assertSame( 5, $args['timeout'] );
-		$this->assertTrue( $args['sslverify'] );
-		$this->assertSame( 'application/json', $args['headers']['Accept'] );
-		$this->assertSame( 'MLAB-GOOD', $args['headers']['X-MLAB-License'] );
-		$this->assertSame( 'https://site.test', $args['headers']['X-MLAB-Site'] );
-	}
-
-	public function test_stored_option_is_memoised_until_the_client_writes(): void {
-		$this->queue_catalog( array( $this->product() ) );
-		$client = new Client();
-		$client->catalog();
-		$this->assertNotNull( $client->product( 'mlab-seo' ) );
-		$GLOBALS['mlab_core_options']['mlab_core_catalog']['products'] = array();
-		$this->assertNotNull( $client->product( 'mlab-seo' ) );
-
-		$this->queue_catalog( array( $this->product( 'mlab-two', 'mlab-two/mlab-two.php' ) ) );
-		$client->catalog( true );
-		$this->assertNull( $client->product( 'mlab-seo' ) );
-		$this->assertNotNull( $client->product( 'mlab-two' ) );
+		$this->assertSame( 'json', $args['headers']['Accept'] );
+		$this->assertSame( 'MLAB-TEST', $args['headers']['X-MLAB-License'] );
 	}
 }

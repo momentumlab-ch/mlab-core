@@ -57,26 +57,4 @@ final class RowTest extends TestCase {
 	public function test_safe_main_file( string $input, string $expected ): void {
 		$this->assertSame( $expected, Row::safe_main_file( $input ) );
 	}
-
-	/**
-	 * @return array<string,array{int,bool}>
-	 */
-	public function error_provider(): array {
-		return array(
-			'401'     => array( 401, true ),
-			'403'     => array( 403, true ),
-			'500'     => array( 500, false ),
-			'429'     => array( 429, false ),
-			'503'     => array( 503, false ),
-			'offline' => array( 0, false ),
-		);
-	}
-
-	/**
-	 * @dataProvider error_provider
-	 */
-	public function test_catalog_after_error( int $status, bool $discarded ): void {
-		$cached = array( array( 'slug' => 'mlab-seo' ) );
-		$this->assertSame( $discarded ? array() : $cached, Row::catalog_after_error( $cached, $status ) );
-	}
 }

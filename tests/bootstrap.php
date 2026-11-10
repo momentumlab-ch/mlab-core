@@ -78,6 +78,21 @@ if ( ! function_exists( 'home_url' ) ) {
 	}
 }
 
+$GLOBALS['mlab_core_unlocked'] = array();
+
+if ( ! function_exists( 'mlab_license' ) ) {
+	/**
+	 * Minimal stand-in of the shared license client for the products API.
+	 */
+	function mlab_license() {
+		return new class() {
+			public function unlocked( string $slug ): bool {
+				return in_array( $slug, $GLOBALS['mlab_core_unlocked'], true );
+			}
+		};
+	}
+}
+
 require_once dirname( __DIR__ ) . '/inc/options.php';
 require_once dirname( __DIR__ ) . '/inc/products.php';
 

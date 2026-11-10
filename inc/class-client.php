@@ -1,6 +1,6 @@
 <?php
 /**
- * Talks to the MomentumLab license server and caches the catalog.
+ * Catalog of MomentumLab plugins, read from the shared MomentumLab License Client.
  *
  * @package mlab-core
  */
@@ -10,61 +10,66 @@ namespace MomentumLab\Core;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * License server client. Only called from the admin or the WordPress update check.
+ * Adapter over mlab_license(): the key, the catalog cache and the license state live in the
+ * shared client (lib/mlab-license-client), so every MomentumLab plugin on the site sees the same.
  */
 final class Client {
 
-	private const OPTION    = 'mlab_core_catalog';
-	private const RETRY_GAP = 300;
-
 	/**
-	 * Stored catalog memoised for the current request, null when not loaded.
+	 * License client, normally mlab_license(); tests pass a fake.
 	 *
-	 * @var array|null
+	 * @var object
 	 */
-	private static ?array $memo = null;
+	private object $license;
 
 	/**
-	 * Forgets the memoised stored catalog.
+	 * Wires the adapter.
+	 *
+	 * @param object|null $license License client; null for mlab_license().
 	 */
-	public static function flush_cache(): void {
-		self::$memo = null;
+	public function __construct( ?object $license = null ) {
+		$this->license = $license ?? mlab_license();
 	}
 
 	/**
-	 * Catalog for the list, fetched again when older than the cache time or on refresh.
+	 * Kept for older callers; the shared client memoises by itself.
+	 */
+	public static function flush_cache(): void {
+	}
+
+	/**
+	 * Catalog for the plugin list. Asks the server only when the stored answer is old, or with $refresh.
 	 *
 	 * @param bool $refresh Ignore the cache.
-	 * @return array{products:array,error:string,fetched_at:int}
+	 * @return array{products:array,error:string,fetched_at:int,status:string}
 	 */
 	public function catalog( bool $refresh = false ): array {
-		$stored = $this->stored();
-		if ( $refresh || $this->is_stale( $stored ) ) {
-			$stored = $this->fetch( $stored );
-			$this->write( $stored );
-		}
+		$state = $this->license->refresh( $refresh );
 		return array(
-			'products'   => $stored['products'],
-			'error'      => $stored['error'],
-			'fetched_at' => $stored['fetched_at'],
+			'products'   => $this->plugins( $state['products'] ),
+			'error'      => 'valid' === $state['status'] || 'none' === $state['status'] ? '' : (string) $state['message'],
+			'fetched_at' => (int) $state['fetched_at'],
+			'status'     => (string) $state['status'],
 		);
 	}
 
 	/**
-	 * Update info for one product from the server (contains the download URL).
+	 * Update info for one product from the server (contains the signed download URL).
 	 *
 	 * @param string $slug Product slug.
 	 * @return array|\WP_Error
 	 */
 	public function update_info( string $slug ) {
-		$result = $this->get_json( $this->update_url( $slug ) );
-		if ( 0 === $result['status'] ) {
-			return new \WP_Error( 'mlab_core_unreachable', $this->default_error() );
+		$response = wp_remote_get( $this->update_url( $slug ), $this->request_args() );
+		if ( is_wp_error( $response ) ) {
+			return new \WP_Error( 'mlab_core_unreachable', $this->unreachable() );
 		}
-		if ( 200 !== $result['status'] || ! is_array( $result['data'] ) ) {
-			return new \WP_Error( 'mlab_core_server_error', $this->error_message( $result['data'] ) );
+		$data = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		if ( 200 !== (int) wp_remote_retrieve_response_code( $response ) || ! is_array( $data ) ) {
+			$message = is_array( $data ) ? (string) ( $data['message'] ?? '' ) : '';
+			return new \WP_Error( 'mlab_core_server_error', '' !== $message ? $message : $this->unreachable() );
 		}
-		return $result['data'];
+		return $data;
 	}
 
 	/**
@@ -73,30 +78,22 @@ final class Client {
 	 * @param string $slug Product slug.
 	 */
 	public function update_url( string $slug ): string {
-		return mlab_core_server_url() . '/wp-json/mlab-ls/v1/update/' . rawurlencode( $slug );
+		return $this->license->server_url() . '/wp-json/mlab-ls/v1/update/' . rawurlencode( $slug );
 	}
 
 	/**
-	 * Arguments for every server request.
+	 * Headers and timeout for every request to the license server.
 	 *
 	 * @return array{timeout:int,headers:array<string,string>}
 	 */
 	public function request_args(): array {
-		$headers = array( 'X-MLAB-Site' => home_url() );
-		$key     = mlab_core_license_key();
-		if ( '' !== $key ) {
-			$headers['X-MLAB-License'] = $key;
-		}
-		return array(
-			'timeout' => (int) mlab_core_option( 'http_timeout' ),
-			'headers' => $headers,
-		);
+		return $this->license->request_args();
 	}
 
 	/**
-	 * Merges timeout and headers of the core into HTTP request arguments.
+	 * Merges timeout and headers into HTTP request arguments, e.g. of an update checker.
 	 *
-	 * @param array $args Request arguments, e.g. from an update checker.
+	 * @param array $args Request arguments.
 	 */
 	public function apply_request_args( array $args ): array {
 		$core            = $this->request_args();
@@ -106,13 +103,13 @@ final class Client {
 	}
 
 	/**
-	 * One product from the stored catalog, no HTTP.
+	 * One installable product of the stored catalog, no HTTP.
 	 *
 	 * @param string $slug Product slug.
 	 */
 	public function product( string $slug ): ?array {
 		foreach ( $this->stored_products() as $product ) {
-			if ( ( $product['slug'] ?? '' ) === $slug ) {
+			if ( $product['slug'] === $slug ) {
 				return $product;
 			}
 		}
@@ -120,124 +117,46 @@ final class Client {
 	}
 
 	/**
-	 * Products of the stored catalog, no HTTP.
+	 * Installable products (plugins) of the stored catalog, no HTTP.
 	 *
 	 * @return array[]
 	 */
 	public function stored_products(): array {
-		return $this->stored()['products'];
+		return $this->plugins( $this->license->products() );
 	}
 
 	/**
-	 * Stored catalog with all keys present.
+	 * Unlocks without a download (e.g. "mlab-seo-pro") that this license includes, no HTTP.
 	 *
-	 * @return array{products:array,error:string,fetched_at:int,failed_at:int}
+	 * @return array[]
 	 */
-	private function stored(): array {
-		if ( null === self::$memo ) {
-			$stored     = get_option( self::OPTION, array() );
-			self::$memo = array(
-				'products'   => (array) ( $stored['products'] ?? array() ),
-				'error'      => (string) ( $stored['error'] ?? '' ),
-				'fetched_at' => (int) ( $stored['fetched_at'] ?? 0 ),
-				'failed_at'  => (int) ( $stored['failed_at'] ?? 0 ),
-			);
-		}
-		return self::$memo;
-	}
-
-	/**
-	 * Saves the stored catalog and drops the memo.
-	 *
-	 * @param array $stored New stored state.
-	 */
-	private function write( array $stored ): void {
-		update_option( self::OPTION, $stored, false );
-		self::flush_cache();
-	}
-
-	/**
-	 * GET request with the core arguments, status code and decoded JSON body.
-	 *
-	 * @param string $url Absolute URL.
-	 * @return array{status:int,data:mixed} Status 0 and no data when the server was not reached.
-	 */
-	private function get_json( string $url ): array {
-		$response = wp_remote_get( $url, $this->apply_request_args( array() ) );
-		if ( is_wp_error( $response ) ) {
-			return array(
-				'status' => 0,
-				'data'   => null,
-			);
-		}
-		return array(
-			'status' => (int) wp_remote_retrieve_response_code( $response ),
-			'data'   => json_decode( (string) wp_remote_retrieve_body( $response ), true ),
-		);
-	}
-
-	/**
-	 * Fetch is due when the cache expired; after a failure wait a few minutes first.
-	 *
-	 * @param array $stored Stored catalog.
-	 */
-	private function is_stale( array $stored ): bool {
-		$last = max( $stored['fetched_at'], $stored['failed_at'] );
-		$wait = '' === $stored['error'] ? (int) mlab_core_option( 'catalog_ttl' ) : self::RETRY_GAP;
-		return time() - $last >= $wait;
-	}
-
-	/**
-	 * Requests the catalog and returns the new stored state.
-	 *
-	 * @param array $stored Current stored state, kept on soft errors.
-	 */
-	private function fetch( array $stored ): array {
-		$result = $this->get_json( mlab_core_server_url() . '/wp-json/mlab-ls/v1/catalog' );
-		$status = $result['status'];
-		$data   = $result['data'];
-		if ( 200 === $status && is_array( $data ) && isset( $data['products'] ) && is_array( $data['products'] ) ) {
-			return array(
-				'products'   => $this->safe_products( $data['products'] ),
-				'error'      => '',
-				'fetched_at' => time(),
-				'failed_at'  => 0,
-			);
-		}
-		$stored['products']  = Row::catalog_after_error( $stored['products'], $status );
-		$stored['error']     = $this->error_message( $data );
-		$stored['failed_at'] = time();
-		return $stored;
-	}
-
-	/**
-	 * Drops products whose main file is not a plain "folder/file.php".
-	 *
-	 * @param array $products Products from the server.
-	 */
-	private function safe_products( array $products ): array {
+	public function unlocks(): array {
 		return array_values(
 			array_filter(
-				$products,
-				static fn( $product ) => is_array( $product ) && '' !== Row::safe_main_file( (string) ( $product['main_file'] ?? '' ) )
+				$this->license->products(),
+				static fn( array $product ): bool => '' === $product['main_file'] && $product['unlocked']
 			)
 		);
 	}
 
 	/**
-	 * Server message if there is one, else the standard text.
+	 * Only products that ship a plugin with a plain "folder/file.php" main file.
 	 *
-	 * @param mixed $data Decoded response body.
+	 * @param array $products Products of the license state.
 	 */
-	private function error_message( $data ): string {
-		$message = is_array( $data ) ? (string) ( $data['message'] ?? '' ) : '';
-		return '' !== $message ? $message : $this->default_error();
+	private function plugins( array $products ): array {
+		return array_values(
+			array_filter(
+				$products,
+				static fn( array $product ): bool => '' !== Row::safe_main_file( (string) $product['main_file'] )
+			)
+		);
 	}
 
 	/**
-	 * Standard text when the server cannot be reached.
+	 * Text when the server cannot be reached.
 	 */
-	private function default_error(): string {
-		return __( 'Der MomentumLab-Server ist gerade nicht erreichbar. Die Liste zeigt den letzten bekannten Stand.', 'mlab-core' );
+	private function unreachable(): string {
+		return __( 'The MomentumLab server cannot be reached right now. Please try again in a few minutes.', 'mlab-core' );
 	}
 }

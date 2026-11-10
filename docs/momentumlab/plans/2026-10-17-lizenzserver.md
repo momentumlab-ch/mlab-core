@@ -24,7 +24,7 @@
 - Datenbank nur über `$wpdb->prepare()` bzw. `$wpdb->insert/update/delete`.
 - Lizenzschlüssel nur als Hash gespeichert. Klartext nie loggen, nie in URLs.
 - Server-Timeouts gegenüber GitHub: 10 Sekunden. Release-Infos 3600 Sekunden gecacht.
-- Keine Hinweise auf Claude oder KI in Code, Kommentaren, readme, Changelog, Commits, PR.
+- Keine Hinweise auf Werkzeuge oder Autoren ausser MomentumLab in Code, Kommentaren, readme, Changelog, Commits, PR.
 - Git-Identität `MomentumLab Dev <support@momentumlab.ch>`. Commit-Format `vX.Y.Z — <type>: <beschreibung>`, Version dieses Plans `v0.1.0`. Nie auf `main` pushen ausser dem leeren Initial-Commit (Task 1). Chris merged.
 - Build grün vor jedem Commit: `composer test` und `composer lint` ohne Fehler.
 

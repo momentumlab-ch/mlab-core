@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @param string $detail Technical detail, may be empty.
  */
 function mlab_core_install_error( string $detail = '' ): WP_Error {
-	$message = __( 'Die Installation hat nicht geklappt. Bitte versuche es erneut oder melde dich bei MomentumLab.', 'mlab-core' );
+	$message = __( 'The installation did not work. Please try again, or contact MomentumLab.', 'mlab-core' );
 	if ( '' !== $detail ) {
 		$message .= ' (' . $detail . ')';
 	}
@@ -42,10 +42,10 @@ function mlab_core_load_upgrader(): void {
  */
 function mlab_core_can_install( string $main_file ) {
 	if ( ! wp_is_file_mod_allowed( 'install_plugins' ) ) {
-		return mlab_core_install_error( __( 'Änderungen an Dateien sind auf dieser Website gesperrt', 'mlab-core' ) );
+		return mlab_core_install_error( __( 'File changes are blocked on this website. Ask your host or developer to allow them.', 'mlab-core' ) );
 	}
 	if ( file_exists( WP_PLUGIN_DIR . '/' . dirname( $main_file ) ) ) {
-		return new WP_Error( 'mlab_core_exists', __( 'Das Plugin ist bereits vorhanden. Bitte aktiviere es in der Liste.', 'mlab-core' ) );
+		return new WP_Error( 'mlab_core_exists', __( 'The plugin is already installed. Please switch it on in the list.', 'mlab-core' ) );
 	}
 	return true;
 }
@@ -99,7 +99,7 @@ function mlab_core_install_product( array $product ) {
 		return $done;
 	}
 	if ( ! file_exists( WP_PLUGIN_DIR . '/' . $main_file ) ) {
-		return mlab_core_install_error( __( 'Die Hauptdatei fehlt im Paket', 'mlab-core' ) );
+		return mlab_core_install_error( __( 'The main file is missing in the download', 'mlab-core' ) );
 	}
 	$activated = activate_plugin( $main_file );
 	return is_wp_error( $activated ) ? mlab_core_install_error( $activated->get_error_message() ) : true;

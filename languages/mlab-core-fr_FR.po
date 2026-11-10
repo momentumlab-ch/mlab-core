@@ -1,0 +1,710 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MomentumLab Core 0.5.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mlab-core\n"
+"POT-Creation-Date: 2026-11-10 10:23+0000\n"
+"PO-Revision-Date: 2026-11-10 10:25+0000\n"
+"Last-Translator: MomentumLab\n"
+"Language-Team: MomentumLab\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Domain: mlab-core\n"
+
+#. Plugin Name of the plugin
+#: mlab-core.php
+msgid "MomentumLab Core"
+msgstr "MomentumLab Core"
+
+#. Description of the plugin
+#: mlab-core.php
+msgid "Shows the MomentumLab plugins with your license key, installs and activates them with one click, and keeps them up to date. Manages the GitHub read tokens for updates from private repositories."
+msgstr "Affiche les extensions MomentumLab avec votre clé de licence, les installe et les active en un clic, et les maintient à jour. Gère les jetons de lecture GitHub pour les mises à jour des dépôts privés."
+
+#. Author of the plugin
+#: mlab-core.php
+msgid "MomentumLab"
+msgstr "MomentumLab"
+
+#. Author URI of the plugin
+#: mlab-core.php
+msgid "https://momentumlab.ch"
+msgstr "https://momentumlab.ch"
+
+#: inc/admin/actions.php:28
+msgid "You are not allowed to do this. Ask an administrator."
+msgstr "Vous n’avez pas l’autorisation de faire cela. Demandez à un administrateur."
+
+#: inc/admin/actions.php:89
+msgid "This plugin is not in the list. Press \"Reload list\" and try again."
+msgstr "Cette extension ne figure pas dans la liste. Cliquez sur « Recharger la liste » et réessayez."
+
+#: inc/admin/actions.php:99
+msgid "The list is up to date."
+msgstr "La liste est à jour."
+
+#: inc/admin/actions.php:109
+msgid "This plugin is not part of your license. Please contact MomentumLab."
+msgstr "Cette extension ne fait pas partie de votre licence. Veuillez contacter MomentumLab."
+
+#: inc/admin/actions.php:111
+msgid "The plugin is installed and active."
+msgstr "L’extension est installée et active."
+
+#: inc/admin/actions.php:122
+msgid "The plugin is not installed. Switch it on to install it."
+msgstr "L’extension n’est pas installée. Activez-la pour l’installer."
+
+#: inc/admin/actions.php:125
+msgid "The plugin is active."
+msgstr "L’extension est active."
+
+#: inc/admin/actions.php:135
+msgid "The plugin is switched off. It stays installed."
+msgstr "L’extension est désactivée. Elle reste installée."
+
+#: inc/admin/health.php:20
+msgid "Fine"
+msgstr "OK"
+
+#: inc/admin/health.php:21
+#: inc/admin/overview.php:188
+msgid "Warning"
+msgstr "Avertissement"
+
+#: inc/admin/health.php:22
+#: inc/admin/overview.php:187
+msgid "Problem"
+msgstr "Problème"
+
+#: inc/admin/health.php:32
+msgid "Check now"
+msgstr "Vérifier maintenant"
+
+#: inc/admin/health.php:41
+msgid "Checks"
+msgstr "Contrôles"
+
+#: inc/admin/health.php:43
+msgid "Not checked yet. Press \"Check now\" to see the result."
+msgstr "Pas encore vérifié. Cliquez sur « Vérifier maintenant » pour voir le résultat."
+
+#: inc/admin/health.php:59
+msgid "Alarm by e-mail"
+msgstr "Alerte par e-mail"
+
+#: inc/admin/health.php:60
+msgid "If a new problem appears, an e-mail goes to these addresses, at most once a day for the same problem. Write one address per line. Leave it empty to switch the alarm off."
+msgstr "En cas de nouveau problème, un e-mail est envoyé à ces adresses, pour un même problème au maximum une fois par jour. Une adresse par ligne. Laisser vide pour désactiver l’alerte."
+
+#: inc/admin/health.php:62
+msgid "Addresses for the alarm, one per line"
+msgstr "Adresses pour l’alerte, une par ligne"
+
+#: inc/admin/health.php:63
+msgid "Save"
+msgstr "Enregistrer"
+
+#: inc/admin/health.php:74
+#: inc/admin/overview.php:83
+msgid "Not checked yet"
+msgstr "Pas encore vérifié"
+
+#. translators: %s: for example "Checked today at 06:00"
+#: inc/admin/health.php:76
+#, php-format
+msgid "%s. Checked automatically every morning at 06:00."
+msgstr "%s. Vérification automatique chaque matin à 06 h 00."
+
+#: inc/admin/health.php:77
+#: inc/admin/menu.php:36
+msgid "Health"
+msgstr "État"
+
+#: inc/admin/health.php:91
+msgid "Checked: there is a problem. See the list for what to do."
+msgstr "Vérifié : un problème existe. La liste indique quoi faire."
+
+#: inc/admin/health.php:91
+msgid "Checked: your website is fine."
+msgstr "Vérifié : votre site est en bon état."
+
+#: inc/admin/health.php:103
+msgid "Saved. The alarm is on."
+msgstr "Enregistré. L’alerte est activée."
+
+#: inc/admin/health.php:103
+msgid "Saved. The alarm is off."
+msgstr "Enregistré. L’alerte est désactivée."
+
+#: inc/admin/installer.php:19
+msgid "The installation did not work. Please try again, or contact MomentumLab."
+msgstr "L’installation a échoué. Veuillez réessayer ou contacter MomentumLab."
+
+#: inc/admin/installer.php:45
+msgid "File changes are blocked on this website. Ask your host or developer to allow them."
+msgstr "Les modifications de fichiers sont bloquées sur ce site. Demandez à votre hébergeur ou à votre développeur de les autoriser."
+
+#: inc/admin/installer.php:48
+msgid "The plugin is already installed. Please switch it on in the list."
+msgstr "L’extension est déjà installée. Veuillez l’activer dans la liste."
+
+#: inc/admin/installer.php:102
+msgid "The main file is missing in the download"
+msgstr "Le fichier principal est absent du téléchargement"
+
+#: inc/admin/menu.php:34
+msgid "Overview"
+msgstr "Vue d’ensemble"
+
+#: inc/admin/menu.php:35
+#: inc/admin/overview.php:113
+#: inc/admin/plugins.php:186
+msgid "Plugins"
+msgstr "Extensions"
+
+#: inc/admin/menu.php:37
+#: inc/admin/settings.php:44
+msgid "Settings"
+msgstr "Réglages"
+
+#: inc/admin/overview.php:39
+msgid "No key"
+msgstr "Aucune clé"
+
+#: inc/admin/overview.php:39
+msgid "No license yet – free plugins work without one"
+msgstr "Pas encore de licence – les extensions gratuites fonctionnent sans"
+
+#: inc/admin/overview.php:41
+#: inc/admin/plugins.php:69
+#: inc/admin/plugins.php:87
+msgid "Active"
+msgstr "Active"
+
+#: inc/admin/overview.php:41
+msgid "Your license is active."
+msgstr "Votre licence est active."
+
+#: inc/admin/overview.php:43
+msgid "Not active"
+msgstr "Inactive"
+
+#: inc/admin/overview.php:43
+msgid "Open the settings to check your license key."
+msgstr "Ouvrez les réglages pour vérifier votre clé de licence."
+
+#: inc/admin/overview.php:45
+msgid "License"
+msgstr "Licence"
+
+#. translators: %s: time, e.g. 06:00
+#: inc/admin/overview.php:56
+#, php-format
+msgid "Checked today at %s"
+msgstr "Vérifié aujourd’hui à %s"
+
+#. translators: %s: date and time
+#: inc/admin/overview.php:59
+#, php-format
+msgid "Checked on %s"
+msgstr "Vérifié le %s"
+
+#: inc/admin/overview.php:81
+msgid "Website health"
+msgstr "Santé du site"
+
+#: inc/admin/overview.php:83
+msgid "The first check runs tomorrow morning."
+msgstr "La première vérification aura lieu demain matin."
+
+#. translators: %d: number of checks that need a look
+#: inc/admin/overview.php:90
+#, php-format
+msgid "%d warning"
+msgid_plural "%d warnings"
+msgstr[0] "%d avertissement"
+msgstr[1] "%d avertissements"
+
+#. translators: %d: number of checks that need a look
+#: inc/admin/overview.php:90
+msgid "All good"
+msgstr "Tout est bon"
+
+#. translators: 1: number of fine checks, 2: number of all checks
+#: inc/admin/overview.php:92
+#, php-format
+msgid "%1$d of %2$d fine"
+msgstr "%1$d sur %2$d en ordre"
+
+#. translators: %d: number of updates
+#: inc/admin/overview.php:106
+#, php-format
+msgid "%d update"
+msgid_plural "%d updates"
+msgstr[0] "%d mise à jour"
+msgstr[1] "%d mises à jour"
+
+#. translators: %d: number of updates
+#: inc/admin/overview.php:106
+msgid "Up to date"
+msgstr "À jour"
+
+#. translators: %d: number of active plugins
+#: inc/admin/overview.php:108
+#, php-format
+msgid "%d active"
+msgstr "%d active(s)"
+
+#. translators: %d: number of unlocked plugins that are not installed
+#: inc/admin/overview.php:111
+#, php-format
+msgid "%d more unlocked"
+msgstr "%d autre(s) débloquée(s)"
+
+#: inc/admin/overview.php:158
+msgid "License problem"
+msgstr "Problème de licence"
+
+#: inc/admin/overview.php:158
+msgid "Open settings"
+msgstr "Ouvrir les réglages"
+
+#: inc/admin/overview.php:161
+msgid "View"
+msgstr "Voir"
+
+#. translators: %s: plugin name
+#: inc/admin/overview.php:166
+#, php-format
+msgid "Update %s"
+msgstr "Mettre à jour %s"
+
+#. translators: 1: new version, 2: installed version
+#: inc/admin/overview.php:168
+#, php-format
+msgid "Version %1$s is ready. You have %2$s."
+msgstr "La version %1$s est disponible. Vous avez la version %2$s."
+
+#: inc/admin/overview.php:169
+msgid "Update"
+msgstr "Mettre à jour"
+
+#. translators: %s: plugin name
+#: inc/admin/overview.php:174
+#, php-format
+msgid "%s is ready to install"
+msgstr "%s est prêt à être installé"
+
+#: inc/admin/overview.php:175
+msgid "Your license includes it. Switch it on to install it."
+msgstr "Votre licence le comprend. Activez-le pour l’installer."
+
+#: inc/admin/overview.php:175
+msgid "Install"
+msgstr "Installer"
+
+#: inc/admin/overview.php:189
+msgid "Notice"
+msgstr "Remarque"
+
+#: inc/admin/overview.php:191
+msgid "To do"
+msgstr "À faire"
+
+#: inc/admin/overview.php:193
+msgid "Nothing to do. Everything is up to date."
+msgstr "Rien à faire. Tout est à jour."
+
+#: inc/admin/overview.php:216
+msgid "Everything important about your website at a glance."
+msgstr "L’essentiel de votre site en un coup d’œil."
+
+#: inc/admin/overview.php:223
+msgid "How MomentumLab works"
+msgstr "Fonctionnement de MomentumLab"
+
+#: inc/admin/overview.php:223
+msgid "One license key covers all MomentumLab plugins on this website. Updates arrive through WordPress as usual. If the license expires, the plugins keep running – only updates and Pro features pause until you renew."
+msgstr "Une seule clé de licence couvre toutes les extensions MomentumLab de ce site. Les mises à jour arrivent comme d’habitude via WordPress. Si la licence expire, les extensions continuent de fonctionner ; seuls les mises à jour et les fonctions Pro sont suspendues jusqu’au renouvellement."
+
+#: inc/admin/plugins.php:68
+msgid "All"
+msgstr "Tous"
+
+#: inc/admin/plugins.php:70
+msgid "Available"
+msgstr "Disponibles"
+
+#: inc/admin/plugins.php:72
+msgid "Filter plugins"
+msgstr "Filtrer les extensions"
+
+#: inc/admin/plugins.php:90
+msgid "Installed, switched off"
+msgstr "Installées, désactivées"
+
+#: inc/admin/plugins.php:92
+msgid "Not included in your license"
+msgstr "Non incluses dans votre licence"
+
+#: inc/admin/plugins.php:92
+msgid "Not installed yet"
+msgstr "Pas encore installées"
+
+#. translators: %s: plugin name
+#: inc/admin/plugins.php:109
+#, php-format
+msgid "Switch off %s"
+msgstr "Désactiver %s"
+
+#. translators: %s: plugin name
+#: inc/admin/plugins.php:109
+#, php-format
+msgid "Switch on %s"
+msgstr "Activer %s"
+
+#. translators: %s: version number
+#: inc/admin/plugins.php:127
+#, php-format
+msgid "Update to %s ready"
+msgstr "Mise à jour vers %s prête"
+
+#: inc/admin/plugins.php:128
+msgid "Update now"
+msgstr "Mettre à jour maintenant"
+
+#: inc/admin/plugins.php:131
+msgid "No more updates: this unlock has expired. The plugin keeps running."
+msgstr "Plus de mises à jour : cette activation a expiré. L’extension continue de fonctionner."
+
+#: inc/admin/plugins.php:131
+msgid "Renew"
+msgstr "Renouveler"
+
+#: inc/admin/plugins.php:145
+msgid "On request"
+msgstr "Sur demande"
+
+#. translators: 1: version number, 2: status such as "Active"
+#: inc/admin/plugins.php:157
+#, php-format
+msgid "Version %1$s · %2$s"
+msgstr "Version %1$s · %2$s"
+
+#: inc/admin/plugins.php:164
+msgid "Ask MomentumLab"
+msgstr "Demander à MomentumLab"
+
+#: inc/admin/plugins.php:174
+msgid "Reload list"
+msgstr "Recharger la liste"
+
+#: inc/admin/plugins.php:186
+msgid "Switch on installs and activates. Switching off only deactivates; nothing is deleted."
+msgstr "Activer installe et active. Désactiver se contente de désactiver ; rien n’est supprimé."
+
+#: inc/admin/settings.php:20
+msgid "Included unlocks"
+msgstr "Activations incluses"
+
+#: inc/admin/settings.php:31
+msgid "Advanced: GitHub access"
+msgstr "Avancé : accès GitHub"
+
+#: inc/admin/settings.php:32
+msgid "Only needed if MomentumLab asks you to. With a license, updates arrive without GitHub."
+msgstr "Nécessaire uniquement si MomentumLab vous le demande. Avec une licence, les mises à jour arrivent sans GitHub."
+
+#: inc/admin/settings.php:44
+msgid "Usually you only enter the license key here once."
+msgstr "En général, la clé de licence ne se saisit qu’une fois ici."
+
+#: inc/admin/settings.php:48
+msgid "What happens when the license expires?"
+msgstr "Que se passe-t-il lorsque la licence expire ?"
+
+#: inc/admin/settings.php:48
+msgid "Your website keeps running. Updates and Pro features pause until you renew. If the MomentumLab server is briefly unreachable, everything stays as it is for 7 days."
+msgstr "Votre site continue de fonctionner. Les mises à jour et les fonctions Pro sont suspendues jusqu’au renouvellement. Si le serveur MomentumLab est brièvement injoignable, tout reste en l’état pendant 7 jours."
+
+#: inc/admin/tokens.php:23
+msgid "For private MomentumLab repositories, WordPress needs a read token from GitHub. It is stored encrypted and never shown."
+msgstr "Pour les dépôts privés MomentumLab, WordPress a besoin d’un jeton de lecture GitHub. Il est enregistré chiffré et n’est jamais affiché."
+
+#: inc/admin/tokens.php:25
+msgid "The token is set in wp-config.php (MLAB_GITHUB_TOKEN) and applies to all repositories."
+msgstr "Le jeton est défini dans wp-config.php (MLAB_GITHUB_TOKEN) et s’applique à tous les dépôts."
+
+#: inc/admin/tokens.php:29
+msgid "Your website has no security keys (AUTH_KEY, SECURE_AUTH_KEY) in wp-config.php. Without them a token cannot be stored safely. Ask your host or developer to add them."
+msgstr "Votre site ne dispose pas de clés de sécurité (AUTH_KEY, SECURE_AUTH_KEY) dans wp-config.php. Sans elles, un jeton ne peut pas être enregistré en toute sécurité. Demandez à votre hébergeur ou à votre développeur de les ajouter."
+
+#: inc/admin/tokens.php:45
+msgid "Applies to"
+msgstr "S’applique à"
+
+#: inc/admin/tokens.php:45
+msgid "Token"
+msgstr "Jeton"
+
+#: inc/admin/tokens.php:45
+msgid "Last test"
+msgstr "Dernier test"
+
+#: inc/admin/tokens.php:45
+msgid "Actions"
+msgstr "Actions"
+
+#: inc/admin/tokens.php:57
+msgid "Applies to (organization, or organization/repository)"
+msgstr "S’applique à (organisation, ou organisation/dépôt)"
+
+#: inc/admin/tokens.php:59
+msgid "Token from GitHub"
+msgstr "Jeton GitHub"
+
+#: inc/admin/tokens.php:61
+msgid "Save and test"
+msgstr "Enregistrer et tester"
+
+#: inc/admin/tokens.php:73
+msgid "not tested yet"
+msgstr "pas encore testé"
+
+#. translators: %s: date
+#: inc/admin/tokens.php:76
+#, php-format
+msgid "Expires on %s."
+msgstr "Expire le %s."
+
+#: inc/admin/tokens.php:80
+msgid "Test connection"
+msgstr "Tester la connexion"
+
+#: inc/admin/tokens.php:82
+msgid "Remove"
+msgstr "Supprimer"
+
+#: inc/admin/tokens.php:93
+msgid "Please enter an organization (for example momentumlab-ch) or organization/repository."
+msgstr "Veuillez saisir une organisation (par exemple momentumlab-ch) ou organisation/dépôt."
+
+#: inc/admin/tokens.php:119
+msgid "The token is set in wp-config.php and cannot be changed here."
+msgstr "Le jeton est défini dans wp-config.php et ne peut pas être modifié ici."
+
+#: inc/admin/tokens.php:125
+msgid "This does not look like a GitHub token. A fine-grained token starts with github_pat_. Please copy it again from GitHub."
+msgstr "Ceci ne ressemble pas à un jeton GitHub. Un jeton à permissions fines commence par github_pat_. Veuillez le copier à nouveau depuis GitHub."
+
+#: inc/admin/tokens.php:129
+msgid "The token could not be encrypted because the server has neither sodium nor openssl. Ask your host to enable one of them."
+msgstr "Le jeton n’a pas pu être chiffré, car le serveur n’a ni sodium ni openssl. Demandez à votre hébergeur d’en activer un."
+
+#. translators: %s: result of the connection test
+#: inc/admin/tokens.php:142
+#, php-format
+msgid "Token saved. Test: %s"
+msgstr "Jeton enregistré. Test : %s"
+
+#: inc/admin/tokens.php:158
+msgid "The saved token can no longer be read because the security keys of your website have changed. Please enter the token again."
+msgstr "Le jeton enregistré ne peut plus être lu, car les clés de sécurité du site ont changé. Veuillez le saisir à nouveau."
+
+#: inc/admin/tokens.php:164
+msgid "This token no longer exists. Reload the page."
+msgstr "Ce jeton n’existe plus. Rechargez la page."
+
+#: inc/admin/tokens.php:174
+msgid "The token has been removed."
+msgstr "Le jeton a été supprimé."
+
+#: inc/class-client.php:160
+msgid "The MomentumLab server cannot be reached right now. Please try again in a few minutes."
+msgstr "Le serveur MomentumLab est injoignable pour le moment. Veuillez réessayer dans quelques minutes."
+
+#: inc/github-tokens.php:104
+msgid "GitHub is not reachable right now. Please try again later."
+msgstr "GitHub est injoignable pour le moment. Veuillez réessayer plus tard."
+
+#: inc/github-tokens.php:111
+msgid "Connection works."
+msgstr "La connexion fonctionne."
+
+#: inc/github-tokens.php:112
+msgid "GitHub rejects the token: it is wrong, expired or revoked. Please enter a new token."
+msgstr "GitHub refuse le jeton : il est incorrect, expiré ou révoqué. Veuillez saisir un nouveau jeton."
+
+#: inc/github-tokens.php:113
+msgid "The token has no read access. Please grant \"Contents: Read\" on GitHub."
+msgstr "Le jeton n’a pas d’accès en lecture. Veuillez accorder « Contents: Read » sur GitHub."
+
+#: inc/github-tokens.php:114
+msgid "The repository is not visible with this token. Please allow access to this repository on GitHub."
+msgstr "Le dépôt n’est pas visible avec ce jeton. Veuillez autoriser l’accès à ce dépôt sur GitHub."
+
+#. translators: %d: HTTP status code
+#: inc/github-tokens.php:119
+#, php-format
+msgid "Unexpected response from GitHub (status %d)."
+msgstr "Réponse inattendue de GitHub (statut %d)."
+
+#: inc/health.php:95
+msgid "Website reachable"
+msgstr "Site accessible"
+
+#. translators: %s: error message
+#: inc/health.php:107
+#, php-format
+msgid "The home page does not respond: %s"
+msgstr "La page d’accueil ne répond pas : %s"
+
+#. translators: %d: HTTP status code
+#: inc/health.php:112
+#, php-format
+msgid "The home page returns error code %d."
+msgstr "La page d’accueil renvoie l’erreur %d."
+
+#. translators: %s: seconds
+#: inc/health.php:115
+#, php-format
+msgid "Responds in %s s."
+msgstr "Répond en %s s."
+
+#: inc/health.php:116
+msgid "This is slow: check caching and the server."
+msgstr "C’est lent : vérifiez le cache et le serveur."
+
+#: inc/health.php:125
+msgid "SSL certificate"
+msgstr "Certificat SSL"
+
+#: inc/health.php:128
+msgid "The website does not use HTTPS. Ask your host to set up an SSL certificate."
+msgstr "Le site n’utilise pas HTTPS. Demandez à votre hébergeur d’installer un certificat SSL."
+
+#: inc/health.php:143
+msgid "The expiry date could not be read."
+msgstr "La date d’expiration n’a pas pu être lue."
+
+#. translators: 1: number of days, 2: date
+#: inc/health.php:146
+#, php-format
+msgid "Valid for another %1$d days (until %2$s)."
+msgstr "Valable encore %1$d jours (jusqu’au %2$s)."
+
+#: inc/health.php:147
+msgid "Does the certificate not renew by itself? Check with your host (e.g. Plesk, Let’s Encrypt)."
+msgstr "Le certificat ne se renouvelle-t-il pas automatiquement ? Vérifiez auprès de votre hébergeur (par ex. Plesk, Let’s Encrypt)."
+
+#: inc/health.php:156
+msgid "Updates"
+msgstr "Mises à jour"
+
+#: inc/health.php:171
+msgid "Everything is up to date."
+msgstr "Tout est à jour."
+
+#. translators: %d: number
+#: inc/health.php:176
+#, php-format
+msgid "%d plugin update"
+msgid_plural "%d plugin updates"
+msgstr[0] "%d mise à jour d’extension"
+msgstr[1] "%d mises à jour d’extensions"
+
+#. translators: %d: number
+#: inc/health.php:180
+#, php-format
+msgid "%d theme update"
+msgid_plural "%d theme updates"
+msgstr[0] "%d mise à jour de thème"
+msgstr[1] "%d mises à jour de thèmes"
+
+#: inc/health.php:183
+msgid "WordPress update"
+msgstr "Mise à jour de WordPress"
+
+#: inc/health.php:185
+msgid "pending."
+msgstr "en attente."
+
+#: inc/health.php:195
+msgid "PHP errors"
+msgstr "Erreurs PHP"
+
+#: inc/health.php:198
+#: inc/health.php:203
+msgid "No error log is active."
+msgstr "Aucun journal d’erreurs n’est actif."
+
+#: inc/health.php:210
+msgid "No serious errors in the last 24 hours."
+msgstr "Aucune erreur grave au cours des 24 dernières heures."
+
+#. translators: %d: number of errors
+#: inc/health.php:213
+#, php-format
+msgid "%d serious PHP error in the last 24 hours. Details in wp-content/debug.log."
+msgid_plural "%d serious PHP errors in the last 24 hours. Details in wp-content/debug.log."
+msgstr[0] "%d erreur PHP grave au cours des 24 dernières heures. Détails dans wp-content/debug.log."
+msgstr[1] "%d erreurs PHP graves au cours des 24 dernières heures. Détails dans wp-content/debug.log."
+
+#: inc/health.php:222
+msgid "Backup"
+msgstr "Sauvegarde"
+
+#. translators: %d: number of days
+#: inc/health.php:227
+#, php-format
+msgid "The last backup (UpdraftPlus) was %d day ago."
+msgid_plural "The last backup (UpdraftPlus) was %d days ago."
+msgstr[0] "La dernière sauvegarde (UpdraftPlus) date d’il y a %d jour."
+msgstr[1] "La dernière sauvegarde (UpdraftPlus) date d’il y a %d jours."
+
+#: inc/health.php:228
+msgid "Please check the schedule in UpdraftPlus."
+msgstr "Vérifiez la planification dans UpdraftPlus."
+
+#: inc/health.php:231
+msgid "Jetpack is connected. The backup status is shown under Jetpack › VaultPress Backup."
+msgstr "Jetpack est connecté. L’état des sauvegardes s’affiche sous Jetpack › VaultPress Backup."
+
+#: inc/health.php:245
+msgid "Missing pages (404)"
+msgstr "Pages introuvables (404)"
+
+#. translators: %d: number of addresses
+#: inc/health.php:250
+#, php-format
+msgid "%d address not found in the last 24 hours."
+msgid_plural "%d addresses not found in the last 24 hours."
+msgstr[0] "%d adresse introuvable au cours des 24 dernières heures."
+msgstr[1] "%d adresses introuvables au cours des 24 dernières heures."
+
+#: inc/health.php:251
+msgid "Please check under SEO › Redirects."
+msgstr "Vérifiez dans SEO › Redirections."
+
+#. translators: %s: site name
+#: inc/health.php:318
+#, php-format
+msgid "Problem on %s"
+msgstr "Problème sur %s"
+
+#: inc/health.php:319
+msgid "Overview:"
+msgstr "Vue d’ensemble :"
+
+#: inc/updater.php:55
+msgid "Updates are not active: please enter a GitHub access token under MomentumLab › Settings."
+msgstr "Les mises à jour ne sont pas actives : veuillez saisir un jeton d’accès GitHub sous MomentumLab › Réglages."
+
+#. translators: %d: number of checks with a problem
+msgid "%d problem"
+msgid_plural "%d problems"
+msgstr[0] "%d problème"
+msgstr[1] "%d problèmes"

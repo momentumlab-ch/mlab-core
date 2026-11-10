@@ -1,97 +1,573 @@
-.mlab-core-box,
-.mlab-core-card {
-	background: #fff;
-	border: 1px solid #c3c4c7;
-	border-radius: 4px;
+/* MomentumLab Core admin. Everything is scoped under .mlab-core. Mobile first. */
+.mlab-core {
+	--mlab-bg: #f5f5f7;
+	--mlab-text: #1d1d1f;
+	--mlab-muted: #515154;
+	--mlab-blue: #0071e3;
+	--mlab-blue-dark: #0058b0;
+	--mlab-line: #d2d2d7;
+	font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
+	color: var(--mlab-text);
+	background: var(--mlab-bg);
+	border-radius: 20px;
 	padding: 16px;
-	margin-bottom: 16px;
+	margin: 16px 10px 0 0;
+	box-sizing: border-box;
+	font-size: 15px;
+	line-height: 1.5;
 }
 
-.mlab-core-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-	gap: 16px;
-	margin-top: 16px;
+.mlab-core *,
+.mlab-core *::before,
+.mlab-core *::after {
+	box-sizing: border-box;
 }
 
-.mlab-core-card {
-	margin-bottom: 0;
+.mlab-core h1 {
+	font-size: 28px;
+	font-weight: 700;
+	line-height: 1.2;
+	margin: 0;
+	padding: 0;
+	color: var(--mlab-text);
+}
+
+.mlab-core h2 {
+	font-size: 17px;
+	font-weight: 600;
+	margin: 0;
+	padding: 0;
+	color: var(--mlab-text);
+}
+
+.mlab-core p {
+	margin: 0 0 12px;
+	font-size: 15px;
+}
+
+.mlab-core a {
+	color: var(--mlab-blue-dark);
+}
+
+.mlab-core .mlab-sub {
+	margin: 6px 0 0;
+	color: var(--mlab-muted);
+}
+
+.mlab-core .mlab-muted {
+	display: block;
+	color: var(--mlab-muted);
+	font-size: 14px;
+}
+
+.mlab-core .mlab-head {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 16px;
+	margin-bottom: 20px;
 }
 
-.mlab-core-card h3 {
+.mlab-core .mlab-head__actions form {
 	margin: 0;
 }
 
-.mlab-core-card p {
-	margin: 0 0 8px;
+/* Cards */
+.mlab-core .mlab-card,
+.mlab-core .mlab-license-box {
+	display: block;
+	background: #fff;
+	border-radius: 16px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+	padding: 20px;
+	margin-bottom: 16px;
+	color: var(--mlab-text);
 }
 
-.mlab-core-card form,
-.mlab-core-card > a {
-	margin-top: auto;
+.mlab-core .mlab-card > h2,
+.mlab-core .mlab-license-box > h2 {
+	margin-bottom: 12px;
 }
 
-.mlab-core-meta {
-	color: #50575e;
+.mlab-core .mlab-card--help {
+	background: transparent;
+	box-shadow: none;
+	padding: 4px 4px 0;
 }
 
-.mlab-core-warning {
-	color: #8a2424;
+.mlab-core .mlab-card--help p {
+	color: var(--mlab-muted);
 }
 
-.mlab-core-buttons {
+.mlab-core .mlab-cards,
+.mlab-core .mlab-grid,
+.mlab-core .mlab-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 16px;
+	margin-bottom: 16px;
+}
+
+.mlab-core .mlab-cards .mlab-card,
+.mlab-core .mlab-grid .mlab-card,
+.mlab-core .mlab-layout .mlab-card {
+	margin-bottom: 0;
+}
+
+.mlab-core .mlab-card--link {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-height: 44px;
+	text-decoration: none;
+}
+
+.mlab-core .mlab-card--link:hover,
+.mlab-core .mlab-card--link:focus-visible {
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+}
+
+.mlab-core .mlab-card__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.mlab-core .mlab-card__line {
+	color: var(--mlab-muted);
+	font-size: 14px;
+}
+
+/* Badges */
+.mlab-core .mlab-badge {
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+	white-space: nowrap;
+	background: #f0f0f2;
+	color: #515154;
+}
+
+.mlab-core .mlab-badge.is-good,
+.mlab-core .mlab-license-badge.is-good {
+	background: #e3f5e7;
+	color: #1e6b30;
+}
+
+.mlab-core .mlab-badge.is-warn {
+	background: #fff1d6;
+	color: #7a4a00;
+}
+
+.mlab-core .mlab-badge.is-bad,
+.mlab-core .mlab-license-badge.is-bad {
+	background: #fde7e5;
+	color: #a11f14;
+}
+
+.mlab-core .mlab-badge.is-info {
+	background: #e8f0fb;
+	color: #0058b0;
+}
+
+.mlab-core .mlab-license-badge {
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+/* Buttons */
+.mlab-core .button,
+.mlab-core .button-small {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 44px;
+	padding: 0 20px;
+	border-radius: 999px;
+	border: 1px solid var(--mlab-line);
+	background: #fff;
+	color: var(--mlab-text);
+	font-size: 14px;
+	line-height: 1.2;
+	cursor: pointer;
+	text-decoration: none;
+	box-shadow: none;
+}
+
+.mlab-core .button:hover {
+	background: #ececf0;
+	color: var(--mlab-text);
+	border-color: var(--mlab-line);
+}
+
+.mlab-core .button-primary {
+	background: var(--mlab-blue);
+	border-color: var(--mlab-blue);
+	color: #fff;
+	font-weight: 600;
+}
+
+.mlab-core .button-primary:hover,
+.mlab-core .button-primary:focus {
+	background: var(--mlab-blue-dark);
+	border-color: var(--mlab-blue-dark);
+	color: #fff;
+}
+
+.mlab-core .button:focus-visible,
+.mlab-core a:focus-visible,
+.mlab-core input:focus-visible,
+.mlab-core textarea:focus-visible,
+.mlab-core summary:focus-visible,
+.mlab-core .mlab-switch:focus-visible {
+	outline: 2px solid var(--mlab-blue);
+	outline-offset: 2px;
+}
+
+.mlab-core .mlab-license-buttons,
+.mlab-core .mlab-actions {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 8px;
 }
 
-.mlab-core .mlab-core-button {
+.mlab-core .mlab-actions form {
+	margin: 0;
+}
+
+/* Forms */
+.mlab-core label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 6px;
+}
+
+.mlab-core .mlab-input,
+.mlab-core input[type="text"],
+.mlab-core input[type="password"],
+.mlab-core textarea {
+	display: block;
+	width: 100%;
+	max-width: 100%;
 	min-height: 44px;
+	padding: 10px 14px;
+	border-radius: 10px;
+	border: 1px solid #8e8e93;
+	background: #fff;
+	color: var(--mlab-text);
+	font-size: 15px;
+}
+
+.mlab-core .description {
+	color: var(--mlab-muted);
+	font-size: 14px;
+}
+
+.mlab-core code {
+	background: var(--mlab-bg);
+	padding: 2px 8px;
+	border-radius: 6px;
+	color: var(--mlab-text);
+}
+
+.mlab-core .mlab-scroll {
+	overflow-x: auto;
+	margin-bottom: 16px;
+}
+
+.mlab-core .widefat {
+	border-radius: 12px;
+	border-color: #e8e8ed;
+}
+
+/* Notices */
+.mlab-core .notice {
+	background: #fff;
+	border: 0;
+	border-left: 4px solid var(--mlab-blue);
+	border-radius: 12px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+	margin: 0 0 16px;
+	padding: 4px 16px;
+}
+
+.mlab-core .notice-success {
+	border-left-color: #1e6b30;
+}
+
+.mlab-core .notice-error {
+	border-left-color: #a11f14;
+}
+
+.mlab-core .notice-warning {
+	border-left-color: #b86e00;
+}
+
+/* To do and checks */
+.mlab-core .mlab-todo,
+.mlab-core .mlab-checks,
+.mlab-core .mlab-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.mlab-core .mlab-todo li,
+.mlab-core .mlab-checks li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+	padding: 12px 0;
+	border-top: 1px solid #f0f0f2;
+}
+
+.mlab-core .mlab-todo li:first-child,
+.mlab-core .mlab-checks li:first-child {
+	border-top: 0;
+}
+
+.mlab-core .mlab-checks li.is-warn,
+.mlab-core .mlab-checks li.is-bad {
+	padding-left: 12px;
+	padding-right: 12px;
+	margin: 0 -12px;
+	border-radius: 12px;
+	border-top-color: transparent;
+}
+
+.mlab-core .mlab-checks li.is-warn {
+	background: #fff8e8;
+}
+
+.mlab-core .mlab-checks li.is-bad {
+	background: #fff1f0;
+}
+
+.mlab-core .mlab-todo__text {
+	flex: 1 1 200px;
+	min-width: 0;
+}
+
+.mlab-core .mlab-todo__text strong {
+	display: block;
+}
+
+.mlab-core .mlab-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #8e8e93;
+	flex: none;
+}
+
+.mlab-core .mlab-dot.is-warn {
+	background: #b86e00;
+}
+
+.mlab-core .mlab-dot.is-bad {
+	background: #c8261a;
+}
+
+.mlab-core .mlab-dot.is-info {
+	background: var(--mlab-blue);
+}
+
+.mlab-core .mlab-empty {
+	color: var(--mlab-muted);
+	margin: 0;
+}
+
+.mlab-core .mlab-list li {
+	padding: 10px 0;
+	border-top: 1px solid #f0f0f2;
+}
+
+.mlab-core .mlab-list li:first-child {
+	border-top: 0;
+}
+
+/* Plugins */
+.mlab-core .mlab-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 16px;
+}
+
+.mlab-core .mlab-filters a {
 	display: inline-flex;
 	align-items: center;
-	justify-content: center;
-	padding: 0 16px;
-}
-
-.mlab-core .mlab-core-input {
 	min-height: 44px;
-	width: 100%;
-	max-width: 400px;
+	padding: 0 16px;
+	border-radius: 999px;
+	color: var(--mlab-muted);
+	text-decoration: none;
+	font-weight: 500;
 }
 
-@media (max-width: 600px) {
-	.mlab-core-grid {
-		grid-template-columns: 1fr;
-	}
-
-	.mlab-core .mlab-core-button {
-		width: 100%;
-	}
+.mlab-core .mlab-filters a[aria-current="page"] {
+	background: #fff;
+	color: var(--mlab-text);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.mlab-core-health {
-	display: inline-block;
-	padding: 2px 8px;
-	border-radius: 10px;
-	font-size: 12px;
+.mlab-core .mlab-plugin__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 4px;
+}
+
+.mlab-core .mlab-plugin__head form {
+	margin: 0;
+}
+
+.mlab-core .mlab-strip {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 4px 12px;
+	padding: 10px 14px;
+	border-radius: 12px;
+	font-size: 14px;
+	margin: 0 0 12px;
+}
+
+.mlab-core .mlab-strip.is-info {
+	background: #e8f0fb;
+	color: #0058b0;
+}
+
+.mlab-core .mlab-strip.is-warn {
+	background: #fff1d6;
+	color: #7a4a00;
+}
+
+.mlab-core .mlab-strip a {
+	color: inherit;
 	font-weight: 600;
-	white-space: nowrap;
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
 }
 
-.mlab-core-health.is-good {
-	background: #edfaef;
-	color: #00631d;
+/* iOS-style switch: a button of 44px height, the track is drawn inside it */
+.mlab-core .mlab-switch {
+	position: relative;
+	flex: none;
+	width: 56px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
 }
 
-.mlab-core-health.is-warn {
-	background: #fcf9e8;
-	color: #8a6100;
+.mlab-core .mlab-switch::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 51px;
+	height: 31px;
+	margin: -15.5px 0 0 -25.5px;
+	border-radius: 999px;
+	background: #8e8e93;
+	transition: background 0.2s;
 }
 
-.mlab-core-health.is-bad {
-	background: #fcf0f1;
-	color: #a00;
+.mlab-core .mlab-switch::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 27px;
+	height: 27px;
+	margin: -13.5px 0 0 -23.5px;
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	transition: transform 0.2s;
+}
+
+.mlab-core .mlab-switch[aria-checked="true"]::before {
+	background: #248a3d;
+}
+
+.mlab-core .mlab-switch[aria-checked="true"]::after {
+	transform: translateX(20px);
+}
+
+.mlab-core .mlab-switch:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Collapsed card */
+.mlab-core .mlab-details summary {
+	display: flex;
+	align-items: center;
+	min-height: 44px;
+	cursor: pointer;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.mlab-core .mlab-details__body {
+	padding-top: 12px;
+}
+
+/* Shared license box (from the license client) */
+.mlab-core .mlab-license-status {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mlab-core .mlab-switch::before,
+	.mlab-core .mlab-switch::after {
+		transition: none;
+	}
+}
+
+/* Tablet and up */
+@media (min-width: 783px) {
+	.mlab-core {
+		padding: 24px;
+		margin-right: 20px;
+	}
+
+	.mlab-core .mlab-head {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.mlab-core .mlab-cards {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.mlab-core .mlab-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.mlab-core .mlab-layout {
+		grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+		align-items: start;
+	}
 }
