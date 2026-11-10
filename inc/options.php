@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function mlab_core_option_defaults(): array {
 	return array(
-		'catalog_ttl'  => 43200,
 		'http_timeout' => 5,
 		'contact_url'  => 'mailto:support@momentumlab.ch',
 	);
@@ -32,26 +31,31 @@ function mlab_core_option( string $key ) {
 }
 
 /**
- * Base URL of the license server without trailing slash.
+ * Base URL of the license server without trailing slash (from the shared license client).
  */
 function mlab_core_server_url(): string {
-	$url = defined( 'MLAB_CORE_SERVER_URL' ) ? (string) constant( 'MLAB_CORE_SERVER_URL' ) : 'https://momentumlab.ch';
-	return rtrim( $url, '/' );
+	return mlab_license()->server_url();
 }
 
 /**
- * True when wp-config.php sets the license key, so the form cannot change it.
+ * True when wp-config.php sets the license key, so no form can change it.
  */
 function mlab_core_license_key_locked(): bool {
-	return defined( 'MLAB_CORE_LICENSE_KEY' ) && '' !== (string) constant( 'MLAB_CORE_LICENSE_KEY' );
+	return mlab_license()->key_locked();
 }
 
 /**
- * License key: the constant from wp-config.php wins over the stored option.
+ * License key of this site, shared by all MomentumLab plugins.
  */
 function mlab_core_license_key(): string {
-	if ( mlab_core_license_key_locked() ) {
-		return (string) constant( 'MLAB_CORE_LICENSE_KEY' );
-	}
-	return (string) get_option( 'mlab_core_license_key', '' );
+	return mlab_license()->key();
+}
+
+/**
+ * URL of a MomentumLab admin page.
+ *
+ * @param string $page Page slug, e.g. "mlab-core-plugins".
+ */
+function mlab_core_page_url( string $page = 'mlab-core' ): string {
+	return admin_url( 'admin.php?page=' . $page );
 }

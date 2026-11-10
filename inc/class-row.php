@@ -51,14 +51,4 @@ final class Row {
 	public static function safe_main_file( string $main_file ): string {
 		return 1 === preg_match( '/\A[a-z0-9_-]+\/[a-z0-9_-]+\.php\z/', $main_file ) ? $main_file : '';
 	}
-
-	/**
-	 * Catalog to keep after a failed request: nothing on 401/403, else the cached one.
-	 *
-	 * @param array $cached Stored products.
-	 * @param int   $status HTTP status, 0 if the server was unreachable.
-	 */
-	public static function catalog_after_error( array $cached, int $status ): array {
-		return in_array( $status, array( 401, 403 ), true ) ? array() : $cached;
-	}
 }

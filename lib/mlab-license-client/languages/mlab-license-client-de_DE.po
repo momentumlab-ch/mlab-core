@@ -1,0 +1,93 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MomentumLab License Client 1.0.0\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: mlab-license-client\n"
+
+#: src/class-admin.php:52
+msgid "License"
+msgstr "Lizenz"
+
+#. translators: %s: link to the MomentumLab page
+#: src/class-admin.php:58
+#, php-format
+msgid "The license key for all MomentumLab plugins is managed on the %s page."
+msgstr "Der Lizenzschlüssel für alle MomentumLab-Plugins wird auf der Seite %s verwaltet."
+
+#. translators: %s: link to the MomentumLab page
+#: src/class-admin.php:58
+msgid "MomentumLab"
+msgstr "MomentumLab"
+
+#: src/class-admin.php:72
+msgid "You are not allowed to change the license."
+msgstr "Du darfst die Lizenz nicht ändern."
+
+#: src/class-admin.php:75
+msgid "The license key is set in wp-config.php and cannot be changed here."
+msgstr "Der Lizenzschlüssel ist in der Datei wp-config.php eingetragen und kann hier nicht geändert werden."
+
+#: src/class-admin.php:80
+msgid "The license has been checked."
+msgstr "Die Lizenz wurde geprüft."
+
+#: src/class-admin.php:85
+msgid "This does not look like a license key. Please copy it completely from the e-mail, e.g. MLAB-XXXX-XXXX-XXXX-XXXX."
+msgstr "Das sieht nicht wie ein Lizenzschlüssel aus. Bitte kopiere ihn vollständig aus der E-Mail, z. B. MLAB-XXXX-XXXX-XXXX-XXXX."
+
+#: src/class-admin.php:88
+msgid "The license key has been removed."
+msgstr "Der Lizenzschlüssel wurde entfernt."
+
+#: src/class-admin.php:90
+msgid "The license key is saved and active."
+msgstr "Der Lizenzschlüssel ist gespeichert und aktiv."
+
+#: src/class-admin.php:101
+msgid "No license key yet. Free features work without one."
+msgstr "Noch kein Lizenzschlüssel vorhanden. Die kostenlosen Funktionen funktionieren auch ohne einen."
+
+#: src/class-admin.php:105
+msgid "Active"
+msgstr "Aktiv"
+
+#: src/class-admin.php:105
+msgid "Not active"
+msgstr "Nicht aktiv"
+
+#: src/class-admin.php:119
+msgid "The license key is set in wp-config.php."
+msgstr "Der Lizenzschlüssel ist in der Datei wp-config.php eingetragen."
+
+#: src/class-admin.php:128
+msgid "License key"
+msgstr "Lizenzschlüssel"
+
+#: src/class-admin.php:130
+msgid "Save and check"
+msgstr "Speichern und prüfen"
+
+#: src/class-admin.php:132
+msgid "Check again"
+msgstr "Erneut prüfen"
+
+#: src/class-admin.php:133
+msgid "Remove key"
+msgstr "Schlüssel entfernen"
+
+#: src/class-admin.php:135
+msgid "You find the key in the e-mail from MomentumLab. One key covers all MomentumLab plugins on this website."
+msgstr "Den Schlüssel findest du in der E-Mail von MomentumLab. Ein Schlüssel gilt für alle MomentumLab-Plugins auf dieser Website."
+
+#: src/class-admin.php:162
+msgid "The license could not be checked. Please try again later."
+msgstr "Die Lizenz konnte nicht geprüft werden. Bitte versuche es später noch einmal."
+
+#: src/class-client.php:276
+msgid "The MomentumLab server cannot be reached right now. Unlocked features keep working for up to 7 days."
+msgstr "Der MomentumLab-Server ist gerade nicht erreichbar. Freigeschaltete Funktionen bleiben bis zu 7 Tage lang aktiv."
+

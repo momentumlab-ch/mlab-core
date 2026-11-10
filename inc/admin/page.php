@@ -10,36 +10,6 @@ use MomentumLab\Core\Row;
 
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_menu', 'mlab_core_register_menu' );
-add_action( 'admin_enqueue_scripts', 'mlab_core_enqueue_assets' );
-
-/**
- * Adds the top-level menu entry.
- */
-function mlab_core_register_menu(): void {
-	add_menu_page(
-		__( 'MomentumLab', 'mlab-core' ),
-		__( 'MomentumLab', 'mlab-core' ),
-		'activate_plugins',
-		'mlab-core',
-		'mlab_core_render_page',
-		'dashicons-screenoptions',
-		81
-	);
-}
-
-/**
- * Loads the stylesheet on this page only.
- *
- * @param string $hook Current admin page hook.
- */
-function mlab_core_enqueue_assets( $hook ): void {
-	if ( 'toplevel_page_mlab-core' !== $hook ) {
-		return;
-	}
-	wp_enqueue_style( 'mlab-core-admin', plugins_url( 'assets/css/admin.css', MLAB_CORE_FILE ), array(), MLAB_CORE_VERSION );
-}
-
 /**
  * Prints the message left by the last action, once.
  */

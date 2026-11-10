@@ -10,7 +10,6 @@ use MomentumLab\Core\Row;
 
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_post_mlab_core_save_key', 'mlab_core_action_save_key' );
 add_action( 'admin_post_mlab_core_refresh', 'mlab_core_action_refresh' );
 add_action( 'admin_post_mlab_core_install', 'mlab_core_action_install' );
 add_action( 'admin_post_mlab_core_activate', 'mlab_core_action_activate' );
@@ -46,7 +45,8 @@ function mlab_core_finish( string $type, string $message ): void {
 		),
 		MINUTE_IN_SECONDS
 	);
-	wp_safe_redirect( admin_url( 'admin.php?page=mlab-core' ) );
+	$back = wp_get_referer();
+	wp_safe_redirect( $back ? $back : mlab_core_page_url() );
 	exit;
 }
 
@@ -89,35 +89,6 @@ function mlab_core_posted_product(): array {
 		mlab_core_finish( 'error', __( 'Dieses Plugin ist nicht in der Liste. Bitte lade die Liste neu.', 'mlab-core' ) );
 	}
 	return $product;
-}
-
-/**
- * Saves or removes the license key and reloads the catalog.
- */
-function mlab_core_action_save_key(): void {
-	mlab_core_guard( 'mlab_core_save_key', array( 'manage_options' ) );
-	if ( mlab_core_license_key_locked() ) {
-		mlab_core_finish( 'error', __( 'Der Lizenzschlüssel ist in der wp-config.php festgelegt und kann hier nicht geändert werden.', 'mlab-core' ) );
-	}
-	// Nonce was checked in mlab_core_guard().
-	if ( isset( $_POST['remove'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		update_option( 'mlab_core_license_key', '', false );
-		mlab_core_reload_and_finish( __( 'Der Lizenzschlüssel wurde entfernt.', 'mlab-core' ) );
-	}
-	mlab_core_store_key( isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-}
-
-/**
- * Stores a new key, reloads the catalog and reports the result.
- *
- * @param string $key Sanitized key from the form.
- */
-function mlab_core_store_key( string $key ): void {
-	if ( '' === $key ) {
-		mlab_core_finish( 'error', __( 'Bitte gib einen Lizenzschlüssel ein.', 'mlab-core' ) );
-	}
-	update_option( 'mlab_core_license_key', $key, false );
-	mlab_core_reload_and_finish( __( 'Der Lizenzschlüssel wurde gespeichert und die Liste neu geladen.', 'mlab-core' ) );
 }
 
 /**
