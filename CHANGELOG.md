@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 — 2026-11-10
+
+- Korrekte Plugin-Version in den Übersetzungsdateien.
+
 ## 0.5.1 — 2026-11-10
 
 - Lizenz-Änderungen auf dem MomentumLab-Lizenzserver kommen jetzt sofort an (Lizenz-Bibliothek 1.1.0).
